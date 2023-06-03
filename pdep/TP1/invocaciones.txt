@@ -1,0 +1,64 @@
+# Ejemplo Invocacion y Respuestas
+
+esDarinesca odisea
+True
+esDarinesca reinas
+False
+
+pintaBuena odisea
+True
+pintaBuena armaMortal
+False
+
+minutosExcedentes odisea
+1
+minutosExcedentes armaMortal
+6
+
+precioBase odisea
+200
+precioBase armaMortal
+22
+precioBase reinas
+124
+
+precioExtra odisea
+10
+precioExtra flor
+100
+precioExtra reinas
+50
+precioExtra armaMortal
+0
+
+
+precioTotal odisea
+189
+precioTotal armaMortal
+22
+
+pepe = Persona "Pepe" 20 30 3 1500
+aplicarTerror pepe odisea 5
+Persona {nombre = "Pepe", satisfaccion = 15, edad = 30, cantidadVistas = 4, credito = 1311}
+
+pepe = Persona "Pepe" 20 30 3 10
+aplicarComedia pepe odisea
+Persona {nombre = "Pepe muy alegre", satisfaccion = 40, edad = 30, cantidadVistas = 4, credito = 0}
+
+aplicarDrama pepe 2 reinas
+Persona {nombre = "Pepe", satisfaccion = 22, edad = 31, cantidadVistas = 4, credito = 0}
+aplicarDrama pepe 5 reinas
+Persona {nombre = "Pepe", satisfaccion = 23, edad = 31, cantidadVistas = 4, credito = 0}
+
+aplicarAccion pepe speed
+Persona {nombre = "Pepe", satisfaccion = 120, edad = 30, cantidadVistas = 4, credito = 0}
+aplicarAccion pepe armaMortal
+Persona {nombre = "Pepe", satisfaccion = 20, edad = 30, cantidadVistas = 4, credito = 0}
+
+aplicarTragicomico pepe odisea
+Persona {nombre = "Pepe muy alegre", satisfaccion = 43, edad = 31, cantidadVistas = 5, credito = 0}
+
+aplicarAventura pepe indianaIV "IV"
+Persona {nombre = "Pepe", satisfaccion = 20, edad = 30, cantidadVistas = 4, credito = 1304}
+aplicarAventura pepe indianaI "IV"
+Persona {nombre = "Pepe muy alegre", satisfaccion = 40, edad = 30, cantidadVistas = 4, credito = 1470}
