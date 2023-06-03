@@ -1,0 +1,10 @@
+0xff                HEXADECIMAL
+127                 DECIMAL
+0159                NO RECONOCIDA
+0xabb1              HEXADECIMAL
+0xx                 NO RECONOCIDA
+0                   OCTAL
+010                 OCTAL
+09                  NO RECONOCIDA
+127a                NO RECONOCIDA
+120                 DECIMAL
