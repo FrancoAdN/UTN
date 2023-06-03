@@ -1,0 +1,100 @@
+2 3 04 Ariel Bentley        Buddy Gale           Peugeot           90 
+3 4 06 Esme-Rose Quinn      Kacy Nicholls        Lamborghini      542 
+2 3 12 Bruce Harvey         Frazer Le            Aston Martin     705 
+3 3 12 Bruce Harvey         Frazer Le            Aston Martin     665 
+3 2 20 Jessie Kidd          Martine Torres       Lexus            796 
+5 4 03 Aoife Flores         Tara Moore           Volkswagen        31 
+3 1 05 Asher Spooner        Stacie Couch         Peugeot          282 
+3 4 15 Jagoda Cowan         Madina Randall       Citroen          445 
+2 4 03 Aoife Flores         Tara Moore           Volkswagen       965 
+5 1 07 Viktor Rees          Eren Benton          Lexus            538 
+1 1 01 Jaheim Bannister     Caolan Morin         Abarth           260 
+1 1 05 Asher Spooner        Stacie Couch         Peugeot          494 
+3 4 08 Kymani Partridge     Willie Jimenez       Chevrolet        917 
+1 3 04 Ariel Bentley        Buddy Gale           Peugeot          822 
+1 1 17 Jett Wyatt           Anais Medrano        Aston Martin     410 
+2 4 14 Bianka Hurley        Yasser Guest         Abarth           370 
+4 1 17 Jett Wyatt           Anais Medrano        Aston Martin     539 
+1 4 14 Bianka Hurley        Yasser Guest         Abarth           424 
+4 4 14 Bianka Hurley        Yasser Guest         Abarth           800 
+1 1 07 Viktor Rees          Eren Benton          Lexus            651 
+4 4 08 Kymani Partridge     Willie Jimenez       Chevrolet        744 
+5 4 02 Shakil Workman       Jon-Paul Rojas       Cadillac         791 
+4 4 15 Jagoda Cowan         Madina Randall       Citroen          622 
+1 3 11 Euan Parkinson       Romany Amin          Ferrari           59 
+2 3 11 Euan Parkinson       Romany Amin          Ferrari          947 
+1 4 06 Esme-Rose Quinn      Kacy Nicholls        Lamborghini      257 
+3 3 11 Euan Parkinson       Romany Amin          Ferrari          276 
+3 3 18 Ruairidh Zimmerman   Alena Traynor        Mercedes-Benz    206 
+4 1 01 Jaheim Bannister     Caolan Morin         Abarth           542 
+5 3 18 Ruairidh Zimmerman   Alena Traynor        Mercedes-Benz    193 
+1 2 20 Jessie Kidd          Martine Torres       Lexus            765 
+4 4 13 Kacie Pugh           Marianna Sparrow     Maserati         527 
+2 1 01 Jaheim Bannister     Caolan Morin         Abarth           355 
+2 4 13 Kacie Pugh           Marianna Sparrow     Maserati         854 
+3 4 10 Landon Hutchinson    Hugh Barnes          Maserati         374 
+4 1 19 Ishaan Friedman      Rupert Vincent       Citroen          678 
+4 3 09 Tiya Greenaway       Sheila Fritz         Alfa Romeo       883 
+3 1 07 Viktor Rees          Eren Benton          Lexus            433 
+2 1 07 Viktor Rees          Eren Benton          Lexus            172 
+2 1 05 Asher Spooner        Stacie Couch         Peugeot          765 
+5 2 20 Jessie Kidd          Martine Torres       Lexus            787 
+1 4 15 Jagoda Cowan         Madina Randall       Citroen          769 
+5 4 15 Jagoda Cowan         Madina Randall       Citroen          662 
+5 4 08 Kymani Partridge     Willie Jimenez       Chevrolet        157 
+5 4 10 Landon Hutchinson    Hugh Barnes          Maserati          35 
+3 1 01 Jaheim Bannister     Caolan Morin         Abarth           540 
+5 4 06 Esme-Rose Quinn      Kacy Nicholls        Lamborghini      760 
+3 3 09 Tiya Greenaway       Sheila Fritz         Alfa Romeo       201 
+2 3 09 Tiya Greenaway       Sheila Fritz         Alfa Romeo       290 
+2 4 06 Esme-Rose Quinn      Kacy Nicholls        Lamborghini       16 
+4 4 06 Esme-Rose Quinn      Kacy Nicholls        Lamborghini      330 
+2 1 19 Ishaan Friedman      Rupert Vincent       Citroen          984 
+2 4 10 Landon Hutchinson    Hugh Barnes          Maserati         120 
+4 4 03 Aoife Flores         Tara Moore           Volkswagen       205 
+5 3 11 Euan Parkinson       Romany Amin          Ferrari          230 
+2 4 02 Shakil Workman       Jon-Paul Rojas       Cadillac           1 
+5 3 09 Tiya Greenaway       Sheila Fritz         Alfa Romeo       822 
+2 2 20 Jessie Kidd          Martine Torres       Lexus            826 
+4 3 04 Ariel Bentley        Buddy Gale           Peugeot          610 
+5 3 04 Ariel Bentley        Buddy Gale           Peugeot          531 
+2 4 08 Kymani Partridge     Willie Jimenez       Chevrolet        468 
+4 3 12 Bruce Harvey         Frazer Le            Aston Martin     468 
+4 4 10 Landon Hutchinson    Hugh Barnes          Maserati         372 
+3 4 02 Shakil Workman       Jon-Paul Rojas       Cadillac         845 
+1 4 10 Landon Hutchinson    Hugh Barnes          Maserati         888 
+4 3 18 Ruairidh Zimmerman   Alena Traynor        Mercedes-Benz    731 
+4 1 05 Asher Spooner        Stacie Couch         Peugeot          472 
+2 3 18 Ruairidh Zimmerman   Alena Traynor        Mercedes-Benz    514 
+4 4 02 Shakil Workman       Jon-Paul Rojas       Cadillac          55 
+5 4 13 Kacie Pugh           Marianna Sparrow     Maserati         986 
+3 3 04 Ariel Bentley        Buddy Gale           Peugeot          524 
+3 2 16 Luc Key              Gurdeep Juarez       Mitsubishi        56 
+5 1 01 Jaheim Bannister     Caolan Morin         Abarth           200 
+5 1 05 Asher Spooner        Stacie Couch         Peugeot          475 
+1 3 18 Ruairidh Zimmerman   Alena Traynor        Mercedes-Benz     41 
+1 1 19 Ishaan Friedman      Rupert Vincent       Citroen          773 
+1 4 13 Kacie Pugh           Marianna Sparrow     Maserati         967 
+1 4 03 Aoife Flores         Tara Moore           Volkswagen       540 
+3 4 13 Kacie Pugh           Marianna Sparrow     Maserati         958 
+1 4 02 Shakil Workman       Jon-Paul Rojas       Cadillac         152 
+5 3 12 Bruce Harvey         Frazer Le            Aston Martin     349 
+5 1 17 Jett Wyatt           Anais Medrano        Aston Martin     807 
+4 2 20 Jessie Kidd          Martine Torres       Lexus            862 
+4 1 07 Viktor Rees          Eren Benton          Lexus            490 
+1 3 09 Tiya Greenaway       Sheila Fritz         Alfa Romeo        72 
+4 2 16 Luc Key              Gurdeep Juarez       Mitsubishi       913 
+3 4 03 Aoife Flores         Tara Moore           Volkswagen        60 
+3 4 14 Bianka Hurley        Yasser Guest         Abarth           598 
+5 4 14 Bianka Hurley        Yasser Guest         Abarth           624 
+2 4 15 Jagoda Cowan         Madina Randall       Citroen          129 
+5 2 16 Luc Key              Gurdeep Juarez       Mitsubishi       788 
+3 1 19 Ishaan Friedman      Rupert Vincent       Citroen          639 
+2 2 16 Luc Key              Gurdeep Juarez       Mitsubishi       840 
+5 1 19 Ishaan Friedman      Rupert Vincent       Citroen          724 
+4 3 11 Euan Parkinson       Romany Amin          Ferrari          846 
+3 1 17 Jett Wyatt           Anais Medrano        Aston Martin      13 
+1 3 12 Bruce Harvey         Frazer Le            Aston Martin     503 
+1 2 16 Luc Key              Gurdeep Juarez       Mitsubishi       399 
+2 1 17 Jett Wyatt           Anais Medrano        Aston Martin     618 
+1 4 08 Kymani Partridge     Willie Jimenez       Chevrolet        200 

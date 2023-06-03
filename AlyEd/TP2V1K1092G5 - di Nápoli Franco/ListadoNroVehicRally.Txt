@@ -1,0 +1,25 @@
+                     Listado de Corredores de tiempos por etapas ord. x Nro. Vehiculo
+
+T.Vehic  Nro.Vehic. Nom. Piloto         Nom. CoPiloto          Marca Vehic.        Tiempo en minutos
+
+  1           1     Jaheim Bannister    Caolan Morin           Abarth              260 355 540 542 200 
+  4           2     Shakil Workman      Jon-Paul Rojas         Cadillac            152 1 845 55 791 
+  4           3     Aoife Flores        Tara Moore             Volkswagen          540 965 60 205 31 
+  3           4     Ariel Bentley       Buddy Gale             Peugeot             822 90 524 610 531 
+  1           5     Asher Spooner       Stacie Couch           Peugeot             494 765 282 472 475 
+  4           6     Esme-Rose Quinn     Kacy Nicholls          Lamborghini         257 16 542 330 760 
+  1           7     Viktor Rees         Eren Benton            Lexus               651 172 433 490 538 
+  4           8     Kymani Partridge    Willie Jimenez         Chevrolet           200 468 917 744 157 
+  3           9     Tiya Greenaway      Sheila Fritz           Alfa Romeo           72 290 201 883 822 
+  4          10     Landon Hutchinson   Hugh Barnes            Maserati            888 120 374 372 35 
+  3          11     Euan Parkinson      Romany Amin            Ferrari              59 947 276 846 230 
+  3          12     Bruce Harvey        Frazer Le              Aston Martin        503 705 665 468 349 
+  4          13     Kacie Pugh          Marianna Sparrow       Maserati            967 854 958 527 986 
+  4          14     Bianka Hurley       Yasser Guest           Abarth              424 370 598 800 624 
+  4          15     Jagoda Cowan        Madina Randall         Citroen             769 129 445 622 662 
+  2          16     Luc Key             Gurdeep Juarez         Mitsubishi          399 840 56 913 788 
+  1          17     Jett Wyatt          Anais Medrano          Aston Martin        410 618 13 539 807 
+  3          18     Ruairidh Zimmerman  Alena Traynor          Mercedes-Benz        41 514 206 731 193 
+  1          19     Ishaan Friedman     Rupert Vincent         Citroen             773 984 639 678 724 
+  2          20     Jessie Kidd         Martine Torres         Lexus               765 826 796 862 787 
+Cant. de abandonos: 0
