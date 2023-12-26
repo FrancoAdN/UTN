@@ -1,0 +1,5385 @@
+Nonterminals useless in grammar
+
+    listaDeclaracion
+
+
+Terminals unused in grammar
+
+    CARACTERDEPUNTUACION
+    SIGNED
+    UNSIGNED
+    SWITCH
+    CASE
+    DEFAULT
+    PALABRARESERVADA
+    COMENTARIO
+    '^'
+
+
+Rules useless in grammar
+
+  118 listaDeclaracion: %empty
+  119                 | declaracion ';' listaDeclaracion
+
+
+Rules useless in parser due to conflicts
+
+   17 listaDeclaraciones: listaDeclaraciones declaracion
+
+   55 tipoDeRetorno: CHAR
+   56              | DOUBLE
+   57              | FLOAT
+   58              | INT
+   59              | SHORT
+
+   73 expOr: expOr OR expAnd
+
+
+State 3 conflicts: 1 shift/reduce
+State 10 conflicts: 1 reduce/reduce
+State 11 conflicts: 1 reduce/reduce
+State 12 conflicts: 1 reduce/reduce
+State 13 conflicts: 1 reduce/reduce
+State 15 conflicts: 1 reduce/reduce
+State 31 conflicts: 34 reduce/reduce
+State 32 conflicts: 7 shift/reduce
+State 37 conflicts: 1 shift/reduce
+State 74 conflicts: 2 shift/reduce
+State 75 conflicts: 2 shift/reduce
+State 82 conflicts: 33 shift/reduce
+State 86 conflicts: 1 reduce/reduce
+State 87 conflicts: 1 reduce/reduce
+State 114 conflicts: 2 shift/reduce
+State 126 conflicts: 34 reduce/reduce
+State 136 conflicts: 7 reduce/reduce
+State 162 conflicts: 1 shift/reduce
+State 167 conflicts: 1 reduce/reduce
+State 174 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: input $end
+
+    1 input: %empty
+    2      | input line
+
+    3 line: '\n'
+    4     | sentencia '\n'
+    5     | sentencia
+
+    6 sentencia: sentCompuesta
+    7          | sentExpresion
+    8          | sentSeleccion
+    9          | sentIteracion
+   10          | sentSalto
+   11          | declaracion
+   12          | '\n'
+   13          | definicionFuncion
+   14          | error
+
+   15 sentCompuesta: '{' listaDeclaraciones listaSentencias '}'
+
+   16 listaDeclaraciones: declaracion
+   17                   | listaDeclaraciones declaracion
+   18                   | %empty
+
+   19 listaSentencias: sentencia
+   20                | listaSentencias sentencia
+   21                | %empty
+
+   22 sentExpresion: expresion ';'
+
+   23 sentSeleccion: IF '(' expresion ')' sentencia
+   24              | IF '(' expresion ')' sentencia ELSE sentencia
+
+   25 sentIteracion: WHILE '(' expresion ')' sentencia
+   26              | DO sentencia WHILE '(' expresion ')' ';'
+   27              | FOR '(' expresion ';' expresion ';' expresion ')'
+
+   28 sentSalto: CONTINUE ';'
+   29          | BREAK ';'
+   30          | RETURN expresion ';'
+   31          | GOTO IDENTIFICADOR ';'
+
+   32 declaracion: declaracionVarSimples
+
+   33 declaracionVarSimples: tipoDeDato listaVarSimples ';'
+   34                      | tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | error caracterDeCorte
+
+   36 tipoDeDato: CHAR
+   37           | DOUBLE
+   38           | FLOAT
+   39           | INT
+   40           | LONG
+   41           | SHORT
+
+   42 listaVarSimples: unaVarSimple
+   43                | unaVarSimple ',' listaVarSimples
+   44                | error
+
+   45 $@1: %empty
+
+   46 unaVarSimple: IDENTIFICADOR $@1 ',' unaVarSimple
+   47             | IDENTIFICADOR
+   48             | IDENTIFICADOR '=' expresion
+   49             | error
+
+   50 definicionFuncion: tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+
+   51 lista_argumentos: argumento ',' lista_argumentos
+   52                 | argumento
+   53                 | %empty
+
+   54 argumento: tipoDeDato IDENTIFICADOR
+
+   55 tipoDeRetorno: CHAR
+   56              | DOUBLE
+   57              | FLOAT
+   58              | INT
+   59              | SHORT
+   60              | VOID
+
+   61 expresion: expAsignacion
+   62          | expresion ',' expAsignacion
+
+   63 expAsignacion: expCondicional
+   64              | expUnaria operAsignacion expAsignacion
+
+   65 operAsignacion: '='
+   66               | MAS_IGUAL
+   67               | MENOS_IGUAL
+   68               | POR_IGUAL
+
+   69 expCondicional: expOr
+   70               | expOr OR expCondicional
+   71               | expOr '?' expresion ':' expCondicional
+
+   72 expOr: expAnd
+   73      | expOr OR expAnd
+
+   74 expAnd: expIgualdad
+   75       | expAnd AND expIgualdad
+
+   76 expIgualdad: expRelacional
+   77            | expIgualdad IGUALDAD expRelacional
+   78            | expIgualdad DESIGUALDAD expRelacional
+
+   79 expRelacional: expAditiva
+   80              | expRelacional '<' expAditiva
+   81              | expRelacional MENORIGUAL expAditiva
+   82              | expRelacional '>' expAditiva
+   83              | expRelacional MAYORIGUAL expAditiva
+
+   84 expAditiva: expMultiplicativa
+   85           | expAditiva '+' expMultiplicativa
+   86           | expAditiva '-' expMultiplicativa
+
+   87 expMultiplicativa: expUnaria
+   88                  | expMultiplicativa '*' expUnaria
+   89                  | expMultiplicativa '/' expUnaria
+   90                  | expMultiplicativa '%' expUnaria
+
+   91 expUnaria: expPostfijo
+   92          | MAS_MAS expUnaria
+   93          | MENOS_MENOS expUnaria
+   94          | expUnaria MAS_MAS
+   95          | expUnaria MENOS_MENOS
+   96          | operUnario expUnaria
+   97          | SIZEOF '(' tipoDeDato ')'
+
+   98 operUnario: '&'
+   99           | '*'
+  100           | '-'
+  101           | '!'
+
+  102 expPostfijo: expPrimaria
+  103            | expPostfijo '[' expresion ']'
+  104            | expPostfijo '(' listaArgumentos ')'
+
+  105 listaArgumentos: expAsignacion
+  106                | listaArgumentos ',' expAsignacion
+  107                | %empty
+
+  108 expPrimaria: IDENTIFICADOR
+  109            | CONST_DEC
+  110            | CONST_OCT
+  111            | CONST_HEX
+  112            | CONST_REAL
+  113            | CONST_CARACTER
+  114            | LITERAL_CADENA
+  115            | '(' expresion ')'
+
+  116 caracterDeCorte: ';'
+  117                | '\n'
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    '\n' (10) 3 4 12 117
+    '!' (33) 101
+    '%' (37) 90
+    '&' (38) 98
+    '(' (40) 23 24 25 26 27 34 50 97 104 115
+    ')' (41) 23 24 25 26 27 34 50 97 104 115
+    '*' (42) 88 99
+    '+' (43) 85
+    ',' (44) 43 46 51 62 106
+    '-' (45) 86 100
+    '/' (47) 89
+    ':' (58) 71
+    ';' (59) 22 26 27 28 29 30 31 33 116
+    '<' (60) 80
+    '=' (61) 48 65
+    '>' (62) 82
+    '?' (63) 71
+    '[' (91) 103
+    ']' (93) 103
+    '^' (94)
+    '{' (123) 15
+    '}' (125) 15
+    error (256) 14 35 44 49
+    LITERAL_CADENA <valor> (258) 114
+    CONST_CARACTER <valor> (259) 113
+    CONST_REAL <valor> (260) 112
+    CONST_HEX <valor> (261) 111
+    CONST_OCT <valor> (262) 110
+    CONST_DEC <valor> (263) 109
+    CARACTERDEPUNTUACION (264)
+    CHAR (265) 36 55
+    DOUBLE (266) 37 56
+    FLOAT (267) 38 57
+    INT (268) 39 58
+    LONG (269) 40
+    SHORT (270) 41 59
+    VOID (271) 60
+    SIGNED (272)
+    UNSIGNED (273)
+    IF (274) 23 24
+    ELSE (275) 24
+    WHILE (276) 25 26
+    DO (277) 26
+    SWITCH (278)
+    FOR (279) 27
+    CASE (280)
+    DEFAULT (281)
+    PALABRARESERVADA (282)
+    BREAK (283) 29
+    RETURN (284) 30
+    GOTO (285) 31
+    CONTINUE (286) 28
+    COMENTARIO (287)
+    IDENTIFICADOR <valor> (288) 31 34 46 47 48 50 54 108
+    SIZEOF (289) 97
+    MENOS_MENOS (290) 93 95
+    MAS_MAS (291) 92 94
+    MAS_IGUAL (292) 66
+    MENOS_IGUAL (293) 67
+    POR_IGUAL (294) 68
+    OR (295) 70 73
+    AND (296) 75
+    MAYORIGUAL (297) 83
+    MENORIGUAL (298) 81
+    DESIGUALDAD (299) 78
+    IGUALDAD (300) 77
+
+
+Nonterminals, with rules where they appear
+
+    $accept (68)
+        on left: 0
+    input (69)
+        on left: 1 2
+        on right: 0 2
+    line (70)
+        on left: 3 4 5
+        on right: 2
+    sentencia (71)
+        on left: 6 7 8 9 10 11 12 13 14
+        on right: 4 5 19 20 23 24 25 26
+    sentCompuesta (72)
+        on left: 15
+        on right: 6 34 50
+    listaDeclaraciones (73)
+        on left: 16 17 18
+        on right: 15 17
+    listaSentencias (74)
+        on left: 19 20 21
+        on right: 15 20
+    sentExpresion (75)
+        on left: 22
+        on right: 7
+    sentSeleccion (76)
+        on left: 23 24
+        on right: 8
+    sentIteracion (77)
+        on left: 25 26 27
+        on right: 9
+    sentSalto (78)
+        on left: 28 29 30 31
+        on right: 10
+    declaracion (79)
+        on left: 32
+        on right: 11 16 17
+    declaracionVarSimples (80)
+        on left: 33 34 35
+        on right: 32
+    tipoDeDato (81)
+        on left: 36 37 38 39 40 41
+        on right: 33 34 54 97
+    listaVarSimples (82)
+        on left: 42 43 44
+        on right: 33 43
+    unaVarSimple (83)
+        on left: 46 47 48 49
+        on right: 42 43 46
+    $@1 (84)
+        on left: 45
+        on right: 46
+    definicionFuncion (85)
+        on left: 50
+        on right: 13
+    lista_argumentos (86)
+        on left: 51 52 53
+        on right: 34 50 51
+    argumento (87)
+        on left: 54
+        on right: 51 52
+    tipoDeRetorno (88)
+        on left: 55 56 57 58 59 60
+        on right: 50
+    expresion (89)
+        on left: 61 62
+        on right: 22 23 24 25 26 27 30 48 62 71 103 115
+    expAsignacion (90)
+        on left: 63 64
+        on right: 61 62 64 105 106
+    operAsignacion (91)
+        on left: 65 66 67 68
+        on right: 64
+    expCondicional (92)
+        on left: 69 70 71
+        on right: 63 70 71
+    expOr (93)
+        on left: 72 73
+        on right: 69 70 71 73
+    expAnd (94)
+        on left: 74 75
+        on right: 72 73 75
+    expIgualdad (95)
+        on left: 76 77 78
+        on right: 74 75 77 78
+    expRelacional (96)
+        on left: 79 80 81 82 83
+        on right: 76 77 78 80 81 82 83
+    expAditiva (97)
+        on left: 84 85 86
+        on right: 79 80 81 82 83 85 86
+    expMultiplicativa (98)
+        on left: 87 88 89 90
+        on right: 84 85 86 88 89 90
+    expUnaria (99)
+        on left: 91 92 93 94 95 96 97
+        on right: 64 87 88 89 90 92 93 94 95 96
+    operUnario (100)
+        on left: 98 99 100 101
+        on right: 96
+    expPostfijo (101)
+        on left: 102 103 104
+        on right: 91 103 104
+    listaArgumentos (102)
+        on left: 105 106 107
+        on right: 104 106
+    expPrimaria (103)
+        on left: 108 109 110 111 112 113 114 115
+        on right: 102
+    caracterDeCorte (104)
+        on left: 116 117
+        on right: 35
+
+
+State 0
+
+    0 $accept: . input $end
+    1 input: . %empty
+    2      | . input line
+
+    $default  reduce using rule 1 (input)
+
+    input  go to state 1
+
+
+State 1
+
+    0 $accept: input . $end
+    2 input: input . line
+    3 line: . '\n'
+    4     | . sentencia '\n'
+    5     | . sentencia
+    6 sentencia: . sentCompuesta
+    7          | . sentExpresion
+    8          | . sentSeleccion
+    9          | . sentIteracion
+   10          | . sentSalto
+   11          | . declaracion
+   12          | . '\n'
+   13          | . definicionFuncion
+   14          | . error
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   22 sentExpresion: . expresion ';'
+   23 sentSeleccion: . IF '(' expresion ')' sentencia
+   24              | . IF '(' expresion ')' sentencia ELSE sentencia
+   25 sentIteracion: . WHILE '(' expresion ')' sentencia
+   26              | . DO sentencia WHILE '(' expresion ')' ';'
+   27              | . FOR '(' expresion ';' expresion ';' expresion ')'
+   28 sentSalto: . CONTINUE ';'
+   29          | . BREAK ';'
+   30          | . RETURN expresion ';'
+   31          | . GOTO IDENTIFICADOR ';'
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: . tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   55 tipoDeRetorno: . CHAR
+   56              | . DOUBLE
+   57              | . FLOAT
+   58              | . INT
+   59              | . SHORT
+   60              | . VOID
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    $end            shift, and go to state 2
+    error           shift, and go to state 3
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    CHAR            shift, and go to state 10
+    DOUBLE          shift, and go to state 11
+    FLOAT           shift, and go to state 12
+    INT             shift, and go to state 13
+    LONG            shift, and go to state 14
+    SHORT           shift, and go to state 15
+    VOID            shift, and go to state 16
+    IF              shift, and go to state 17
+    WHILE           shift, and go to state 18
+    DO              shift, and go to state 19
+    FOR             shift, and go to state 20
+    BREAK           shift, and go to state 21
+    RETURN          shift, and go to state 22
+    GOTO            shift, and go to state 23
+    CONTINUE        shift, and go to state 24
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '\n'            shift, and go to state 31
+    '{'             shift, and go to state 32
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    line                   go to state 36
+    sentencia              go to state 37
+    sentCompuesta          go to state 38
+    sentExpresion          go to state 39
+    sentSeleccion          go to state 40
+    sentIteracion          go to state 41
+    sentSalto              go to state 42
+    declaracion            go to state 43
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+    definicionFuncion      go to state 46
+    tipoDeRetorno          go to state 47
+    expresion              go to state 48
+    expAsignacion          go to state 49
+    expCondicional         go to state 50
+    expOr                  go to state 51
+    expAnd                 go to state 52
+    expIgualdad            go to state 53
+    expRelacional          go to state 54
+    expAditiva             go to state 55
+    expMultiplicativa      go to state 56
+    expUnaria              go to state 57
+    operUnario             go to state 58
+    expPostfijo            go to state 59
+    expPrimaria            go to state 60
+
+
+State 2
+
+    0 $accept: input $end .
+
+    $default  accept
+
+
+State 3
+
+   14 sentencia: error .  [$end, error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, ELSE, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '}', '(', '&', '!']
+   35 declaracionVarSimples: error . caracterDeCorte
+  116 caracterDeCorte: . ';'
+  117                | . '\n'
+
+    '\n'  shift, and go to state 61
+    ';'   shift, and go to state 62
+
+    '\n'      [reduce using rule 14 (sentencia)]
+    $default  reduce using rule 14 (sentencia)
+
+    caracterDeCorte  go to state 63
+
+
+State 4
+
+  114 expPrimaria: LITERAL_CADENA .
+
+    $default  reduce using rule 114 (expPrimaria)
+
+
+State 5
+
+  113 expPrimaria: CONST_CARACTER .
+
+    $default  reduce using rule 113 (expPrimaria)
+
+
+State 6
+
+  112 expPrimaria: CONST_REAL .
+
+    $default  reduce using rule 112 (expPrimaria)
+
+
+State 7
+
+  111 expPrimaria: CONST_HEX .
+
+    $default  reduce using rule 111 (expPrimaria)
+
+
+State 8
+
+  110 expPrimaria: CONST_OCT .
+
+    $default  reduce using rule 110 (expPrimaria)
+
+
+State 9
+
+  109 expPrimaria: CONST_DEC .
+
+    $default  reduce using rule 109 (expPrimaria)
+
+
+State 10
+
+   36 tipoDeDato: CHAR .  [error, IDENTIFICADOR]
+   55 tipoDeRetorno: CHAR .  [IDENTIFICADOR]
+
+    IDENTIFICADOR  reduce using rule 36 (tipoDeDato)
+    IDENTIFICADOR  [reduce using rule 55 (tipoDeRetorno)]
+    $default       reduce using rule 36 (tipoDeDato)
+
+
+State 11
+
+   37 tipoDeDato: DOUBLE .  [error, IDENTIFICADOR]
+   56 tipoDeRetorno: DOUBLE .  [IDENTIFICADOR]
+
+    IDENTIFICADOR  reduce using rule 37 (tipoDeDato)
+    IDENTIFICADOR  [reduce using rule 56 (tipoDeRetorno)]
+    $default       reduce using rule 37 (tipoDeDato)
+
+
+State 12
+
+   38 tipoDeDato: FLOAT .  [error, IDENTIFICADOR]
+   57 tipoDeRetorno: FLOAT .  [IDENTIFICADOR]
+
+    IDENTIFICADOR  reduce using rule 38 (tipoDeDato)
+    IDENTIFICADOR  [reduce using rule 57 (tipoDeRetorno)]
+    $default       reduce using rule 38 (tipoDeDato)
+
+
+State 13
+
+   39 tipoDeDato: INT .  [error, IDENTIFICADOR]
+   58 tipoDeRetorno: INT .  [IDENTIFICADOR]
+
+    IDENTIFICADOR  reduce using rule 39 (tipoDeDato)
+    IDENTIFICADOR  [reduce using rule 58 (tipoDeRetorno)]
+    $default       reduce using rule 39 (tipoDeDato)
+
+
+State 14
+
+   40 tipoDeDato: LONG .
+
+    $default  reduce using rule 40 (tipoDeDato)
+
+
+State 15
+
+   41 tipoDeDato: SHORT .  [error, IDENTIFICADOR]
+   59 tipoDeRetorno: SHORT .  [IDENTIFICADOR]
+
+    IDENTIFICADOR  reduce using rule 41 (tipoDeDato)
+    IDENTIFICADOR  [reduce using rule 59 (tipoDeRetorno)]
+    $default       reduce using rule 41 (tipoDeDato)
+
+
+State 16
+
+   60 tipoDeRetorno: VOID .
+
+    $default  reduce using rule 60 (tipoDeRetorno)
+
+
+State 17
+
+   23 sentSeleccion: IF . '(' expresion ')' sentencia
+   24              | IF . '(' expresion ')' sentencia ELSE sentencia
+
+    '('  shift, and go to state 64
+
+
+State 18
+
+   25 sentIteracion: WHILE . '(' expresion ')' sentencia
+
+    '('  shift, and go to state 65
+
+
+State 19
+
+    6 sentencia: . sentCompuesta
+    7          | . sentExpresion
+    8          | . sentSeleccion
+    9          | . sentIteracion
+   10          | . sentSalto
+   11          | . declaracion
+   12          | . '\n'
+   13          | . definicionFuncion
+   14          | . error
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   22 sentExpresion: . expresion ';'
+   23 sentSeleccion: . IF '(' expresion ')' sentencia
+   24              | . IF '(' expresion ')' sentencia ELSE sentencia
+   25 sentIteracion: . WHILE '(' expresion ')' sentencia
+   26              | . DO sentencia WHILE '(' expresion ')' ';'
+   26              | DO . sentencia WHILE '(' expresion ')' ';'
+   27              | . FOR '(' expresion ';' expresion ';' expresion ')'
+   28 sentSalto: . CONTINUE ';'
+   29          | . BREAK ';'
+   30          | . RETURN expresion ';'
+   31          | . GOTO IDENTIFICADOR ';'
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: . tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   55 tipoDeRetorno: . CHAR
+   56              | . DOUBLE
+   57              | . FLOAT
+   58              | . INT
+   59              | . SHORT
+   60              | . VOID
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    error           shift, and go to state 3
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    CHAR            shift, and go to state 10
+    DOUBLE          shift, and go to state 11
+    FLOAT           shift, and go to state 12
+    INT             shift, and go to state 13
+    LONG            shift, and go to state 14
+    SHORT           shift, and go to state 15
+    VOID            shift, and go to state 16
+    IF              shift, and go to state 17
+    WHILE           shift, and go to state 18
+    DO              shift, and go to state 19
+    FOR             shift, and go to state 20
+    BREAK           shift, and go to state 21
+    RETURN          shift, and go to state 22
+    GOTO            shift, and go to state 23
+    CONTINUE        shift, and go to state 24
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '\n'            shift, and go to state 66
+    '{'             shift, and go to state 32
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    sentencia              go to state 67
+    sentCompuesta          go to state 38
+    sentExpresion          go to state 39
+    sentSeleccion          go to state 40
+    sentIteracion          go to state 41
+    sentSalto              go to state 42
+    declaracion            go to state 43
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+    definicionFuncion      go to state 46
+    tipoDeRetorno          go to state 47
+    expresion              go to state 48
+    expAsignacion          go to state 49
+    expCondicional         go to state 50
+    expOr                  go to state 51
+    expAnd                 go to state 52
+    expIgualdad            go to state 53
+    expRelacional          go to state 54
+    expAditiva             go to state 55
+    expMultiplicativa      go to state 56
+    expUnaria              go to state 57
+    operUnario             go to state 58
+    expPostfijo            go to state 59
+    expPrimaria            go to state 60
+
+
+State 20
+
+   27 sentIteracion: FOR . '(' expresion ';' expresion ';' expresion ')'
+
+    '('  shift, and go to state 68
+
+
+State 21
+
+   29 sentSalto: BREAK . ';'
+
+    ';'  shift, and go to state 69
+
+
+State 22
+
+   30 sentSalto: RETURN . expresion ';'
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 70
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 23
+
+   31 sentSalto: GOTO . IDENTIFICADOR ';'
+
+    IDENTIFICADOR  shift, and go to state 71
+
+
+State 24
+
+   28 sentSalto: CONTINUE . ';'
+
+    ';'  shift, and go to state 72
+
+
+State 25
+
+  108 expPrimaria: IDENTIFICADOR .
+
+    $default  reduce using rule 108 (expPrimaria)
+
+
+State 26
+
+   97 expUnaria: SIZEOF . '(' tipoDeDato ')'
+
+    '('  shift, and go to state 73
+
+
+State 27
+
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   93          | MENOS_MENOS . expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expUnaria    go to state 74
+    operUnario   go to state 58
+    expPostfijo  go to state 59
+    expPrimaria  go to state 60
+
+
+State 28
+
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   92          | MAS_MAS . expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expUnaria    go to state 75
+    operUnario   go to state 58
+    expPostfijo  go to state 59
+    expPrimaria  go to state 60
+
+
+State 29
+
+  100 operUnario: '-' .
+
+    $default  reduce using rule 100 (operUnario)
+
+
+State 30
+
+   99 operUnario: '*' .
+
+    $default  reduce using rule 99 (operUnario)
+
+
+State 31
+
+    3 line: '\n' .  [$end, error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '(', '&', '!']
+   12 sentencia: '\n' .  [$end, error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '(', '&', '!']
+
+    $end            reduce using rule 3 (line)
+    $end            [reduce using rule 12 (sentencia)]
+    error           reduce using rule 3 (line)
+    error           [reduce using rule 12 (sentencia)]
+    LITERAL_CADENA  reduce using rule 3 (line)
+    LITERAL_CADENA  [reduce using rule 12 (sentencia)]
+    CONST_CARACTER  reduce using rule 3 (line)
+    CONST_CARACTER  [reduce using rule 12 (sentencia)]
+    CONST_REAL      reduce using rule 3 (line)
+    CONST_REAL      [reduce using rule 12 (sentencia)]
+    CONST_HEX       reduce using rule 3 (line)
+    CONST_HEX       [reduce using rule 12 (sentencia)]
+    CONST_OCT       reduce using rule 3 (line)
+    CONST_OCT       [reduce using rule 12 (sentencia)]
+    CONST_DEC       reduce using rule 3 (line)
+    CONST_DEC       [reduce using rule 12 (sentencia)]
+    CHAR            reduce using rule 3 (line)
+    CHAR            [reduce using rule 12 (sentencia)]
+    DOUBLE          reduce using rule 3 (line)
+    DOUBLE          [reduce using rule 12 (sentencia)]
+    FLOAT           reduce using rule 3 (line)
+    FLOAT           [reduce using rule 12 (sentencia)]
+    INT             reduce using rule 3 (line)
+    INT             [reduce using rule 12 (sentencia)]
+    LONG            reduce using rule 3 (line)
+    LONG            [reduce using rule 12 (sentencia)]
+    SHORT           reduce using rule 3 (line)
+    SHORT           [reduce using rule 12 (sentencia)]
+    VOID            reduce using rule 3 (line)
+    VOID            [reduce using rule 12 (sentencia)]
+    IF              reduce using rule 3 (line)
+    IF              [reduce using rule 12 (sentencia)]
+    WHILE           reduce using rule 3 (line)
+    WHILE           [reduce using rule 12 (sentencia)]
+    DO              reduce using rule 3 (line)
+    DO              [reduce using rule 12 (sentencia)]
+    FOR             reduce using rule 3 (line)
+    FOR             [reduce using rule 12 (sentencia)]
+    BREAK           reduce using rule 3 (line)
+    BREAK           [reduce using rule 12 (sentencia)]
+    RETURN          reduce using rule 3 (line)
+    RETURN          [reduce using rule 12 (sentencia)]
+    GOTO            reduce using rule 3 (line)
+    GOTO            [reduce using rule 12 (sentencia)]
+    CONTINUE        reduce using rule 3 (line)
+    CONTINUE        [reduce using rule 12 (sentencia)]
+    IDENTIFICADOR   reduce using rule 3 (line)
+    IDENTIFICADOR   [reduce using rule 12 (sentencia)]
+    SIZEOF          reduce using rule 3 (line)
+    SIZEOF          [reduce using rule 12 (sentencia)]
+    MENOS_MENOS     reduce using rule 3 (line)
+    MENOS_MENOS     [reduce using rule 12 (sentencia)]
+    MAS_MAS         reduce using rule 3 (line)
+    MAS_MAS         [reduce using rule 12 (sentencia)]
+    '-'             reduce using rule 3 (line)
+    '-'             [reduce using rule 12 (sentencia)]
+    '*'             reduce using rule 3 (line)
+    '*'             [reduce using rule 12 (sentencia)]
+    '\n'            reduce using rule 3 (line)
+    '\n'            [reduce using rule 12 (sentencia)]
+    '{'             reduce using rule 3 (line)
+    '{'             [reduce using rule 12 (sentencia)]
+    '('             reduce using rule 3 (line)
+    '('             [reduce using rule 12 (sentencia)]
+    '&'             reduce using rule 3 (line)
+    '&'             [reduce using rule 12 (sentencia)]
+    '!'             reduce using rule 3 (line)
+    '!'             [reduce using rule 12 (sentencia)]
+    $default        reduce using rule 3 (line)
+
+
+State 32
+
+   15 sentCompuesta: '{' . listaDeclaraciones listaSentencias '}'
+   16 listaDeclaraciones: . declaracion
+   17                   | . listaDeclaraciones declaracion
+   18                   | . %empty  [error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '}', '(', '&', '!']
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+
+    error   shift, and go to state 76
+    CHAR    shift, and go to state 77
+    DOUBLE  shift, and go to state 78
+    FLOAT   shift, and go to state 79
+    INT     shift, and go to state 80
+    LONG    shift, and go to state 14
+    SHORT   shift, and go to state 81
+
+    error           [reduce using rule 18 (listaDeclaraciones)]
+    LITERAL_CADENA  reduce using rule 18 (listaDeclaraciones)
+    CONST_CARACTER  reduce using rule 18 (listaDeclaraciones)
+    CONST_REAL      reduce using rule 18 (listaDeclaraciones)
+    CONST_HEX       reduce using rule 18 (listaDeclaraciones)
+    CONST_OCT       reduce using rule 18 (listaDeclaraciones)
+    CONST_DEC       reduce using rule 18 (listaDeclaraciones)
+    CHAR            [reduce using rule 18 (listaDeclaraciones)]
+    DOUBLE          [reduce using rule 18 (listaDeclaraciones)]
+    FLOAT           [reduce using rule 18 (listaDeclaraciones)]
+    INT             [reduce using rule 18 (listaDeclaraciones)]
+    LONG            [reduce using rule 18 (listaDeclaraciones)]
+    SHORT           [reduce using rule 18 (listaDeclaraciones)]
+    VOID            reduce using rule 18 (listaDeclaraciones)
+    IF              reduce using rule 18 (listaDeclaraciones)
+    WHILE           reduce using rule 18 (listaDeclaraciones)
+    DO              reduce using rule 18 (listaDeclaraciones)
+    FOR             reduce using rule 18 (listaDeclaraciones)
+    BREAK           reduce using rule 18 (listaDeclaraciones)
+    RETURN          reduce using rule 18 (listaDeclaraciones)
+    GOTO            reduce using rule 18 (listaDeclaraciones)
+    CONTINUE        reduce using rule 18 (listaDeclaraciones)
+    IDENTIFICADOR   reduce using rule 18 (listaDeclaraciones)
+    SIZEOF          reduce using rule 18 (listaDeclaraciones)
+    MENOS_MENOS     reduce using rule 18 (listaDeclaraciones)
+    MAS_MAS         reduce using rule 18 (listaDeclaraciones)
+    '-'             reduce using rule 18 (listaDeclaraciones)
+    '*'             reduce using rule 18 (listaDeclaraciones)
+    '\n'            reduce using rule 18 (listaDeclaraciones)
+    '{'             reduce using rule 18 (listaDeclaraciones)
+    '}'             reduce using rule 18 (listaDeclaraciones)
+    '('             reduce using rule 18 (listaDeclaraciones)
+    '&'             reduce using rule 18 (listaDeclaraciones)
+    '!'             reduce using rule 18 (listaDeclaraciones)
+
+    listaDeclaraciones     go to state 82
+    declaracion            go to state 83
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+
+
+State 33
+
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+  115            | '(' . expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 84
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 34
+
+   98 operUnario: '&' .
+
+    $default  reduce using rule 98 (operUnario)
+
+
+State 35
+
+  101 operUnario: '!' .
+
+    $default  reduce using rule 101 (operUnario)
+
+
+State 36
+
+    2 input: input line .
+
+    $default  reduce using rule 2 (input)
+
+
+State 37
+
+    4 line: sentencia . '\n'
+    5     | sentencia .  [$end, error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '(', '&', '!']
+
+    '\n'  shift, and go to state 85
+
+    '\n'      [reduce using rule 5 (line)]
+    $default  reduce using rule 5 (line)
+
+
+State 38
+
+    6 sentencia: sentCompuesta .
+
+    $default  reduce using rule 6 (sentencia)
+
+
+State 39
+
+    7 sentencia: sentExpresion .
+
+    $default  reduce using rule 7 (sentencia)
+
+
+State 40
+
+    8 sentencia: sentSeleccion .
+
+    $default  reduce using rule 8 (sentencia)
+
+
+State 41
+
+    9 sentencia: sentIteracion .
+
+    $default  reduce using rule 9 (sentencia)
+
+
+State 42
+
+   10 sentencia: sentSalto .
+
+    $default  reduce using rule 10 (sentencia)
+
+
+State 43
+
+   11 sentencia: declaracion .
+
+    $default  reduce using rule 11 (sentencia)
+
+
+State 44
+
+   32 declaracion: declaracionVarSimples .
+
+    $default  reduce using rule 32 (declaracion)
+
+
+State 45
+
+   33 declaracionVarSimples: tipoDeDato . listaVarSimples ';'
+   34                      | tipoDeDato . IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   42 listaVarSimples: . unaVarSimple
+   43                | . unaVarSimple ',' listaVarSimples
+   44                | . error
+   46 unaVarSimple: . IDENTIFICADOR $@1 ',' unaVarSimple
+   47             | . IDENTIFICADOR
+   48             | . IDENTIFICADOR '=' expresion
+   49             | . error
+
+    error          shift, and go to state 86
+    IDENTIFICADOR  shift, and go to state 87
+
+    listaVarSimples  go to state 88
+    unaVarSimple     go to state 89
+
+
+State 46
+
+   13 sentencia: definicionFuncion .
+
+    $default  reduce using rule 13 (sentencia)
+
+
+State 47
+
+   50 definicionFuncion: tipoDeRetorno . IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+
+    IDENTIFICADOR  shift, and go to state 90
+
+
+State 48
+
+   22 sentExpresion: expresion . ';'
+   62 expresion: expresion . ',' expAsignacion
+
+    ';'  shift, and go to state 91
+    ','  shift, and go to state 92
+
+
+State 49
+
+   61 expresion: expAsignacion .
+
+    $default  reduce using rule 61 (expresion)
+
+
+State 50
+
+   63 expAsignacion: expCondicional .
+
+    $default  reduce using rule 63 (expAsignacion)
+
+
+State 51
+
+   69 expCondicional: expOr .  [';', ')', ',', ':', ']']
+   70               | expOr . OR expCondicional
+   71               | expOr . '?' expresion ':' expCondicional
+   73 expOr: expOr . OR expAnd
+
+    OR   shift, and go to state 93
+    '?'  shift, and go to state 94
+
+    $default  reduce using rule 69 (expCondicional)
+
+
+State 52
+
+   72 expOr: expAnd .  [OR, ';', ')', ',', '?', ':', ']']
+   75 expAnd: expAnd . AND expIgualdad
+
+    AND  shift, and go to state 95
+
+    $default  reduce using rule 72 (expOr)
+
+
+State 53
+
+   74 expAnd: expIgualdad .  [OR, AND, ';', ')', ',', '?', ':', ']']
+   77 expIgualdad: expIgualdad . IGUALDAD expRelacional
+   78            | expIgualdad . DESIGUALDAD expRelacional
+
+    DESIGUALDAD  shift, and go to state 96
+    IGUALDAD     shift, and go to state 97
+
+    $default  reduce using rule 74 (expAnd)
+
+
+State 54
+
+   76 expIgualdad: expRelacional .  [OR, AND, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   80 expRelacional: expRelacional . '<' expAditiva
+   81              | expRelacional . MENORIGUAL expAditiva
+   82              | expRelacional . '>' expAditiva
+   83              | expRelacional . MAYORIGUAL expAditiva
+
+    '<'         shift, and go to state 98
+    '>'         shift, and go to state 99
+    MAYORIGUAL  shift, and go to state 100
+    MENORIGUAL  shift, and go to state 101
+
+    $default  reduce using rule 76 (expIgualdad)
+
+
+State 55
+
+   79 expRelacional: expAditiva .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   85 expAditiva: expAditiva . '+' expMultiplicativa
+   86           | expAditiva . '-' expMultiplicativa
+
+    '+'  shift, and go to state 102
+    '-'  shift, and go to state 103
+
+    $default  reduce using rule 79 (expRelacional)
+
+
+State 56
+
+   84 expAditiva: expMultiplicativa .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', ';', ')', ',', '?', ':', ']']
+   88 expMultiplicativa: expMultiplicativa . '*' expUnaria
+   89                  | expMultiplicativa . '/' expUnaria
+   90                  | expMultiplicativa . '%' expUnaria
+
+    '*'  shift, and go to state 104
+    '/'  shift, and go to state 105
+    '%'  shift, and go to state 106
+
+    $default  reduce using rule 84 (expAditiva)
+
+
+State 57
+
+   64 expAsignacion: expUnaria . operAsignacion expAsignacion
+   65 operAsignacion: . '='
+   66               | . MAS_IGUAL
+   67               | . MENOS_IGUAL
+   68               | . POR_IGUAL
+   87 expMultiplicativa: expUnaria .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+   94 expUnaria: expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+    '='          shift, and go to state 109
+    MAS_IGUAL    shift, and go to state 110
+    MENOS_IGUAL  shift, and go to state 111
+    POR_IGUAL    shift, and go to state 112
+
+    $default  reduce using rule 87 (expMultiplicativa)
+
+    operAsignacion  go to state 113
+
+
+State 58
+
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   96          | operUnario . expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expUnaria    go to state 114
+    operUnario   go to state 58
+    expPostfijo  go to state 59
+    expPrimaria  go to state 60
+
+
+State 59
+
+   91 expUnaria: expPostfijo .  [MENOS_MENOS, MAS_MAS, '=', MAS_IGUAL, MENOS_IGUAL, POR_IGUAL, OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+  103 expPostfijo: expPostfijo . '[' expresion ']'
+  104            | expPostfijo . '(' listaArgumentos ')'
+
+    '('  shift, and go to state 115
+    '['  shift, and go to state 116
+
+    $default  reduce using rule 91 (expUnaria)
+
+
+State 60
+
+  102 expPostfijo: expPrimaria .
+
+    $default  reduce using rule 102 (expPostfijo)
+
+
+State 61
+
+  117 caracterDeCorte: '\n' .
+
+    $default  reduce using rule 117 (caracterDeCorte)
+
+
+State 62
+
+  116 caracterDeCorte: ';' .
+
+    $default  reduce using rule 116 (caracterDeCorte)
+
+
+State 63
+
+   35 declaracionVarSimples: error caracterDeCorte .
+
+    $default  reduce using rule 35 (declaracionVarSimples)
+
+
+State 64
+
+   23 sentSeleccion: IF '(' . expresion ')' sentencia
+   24              | IF '(' . expresion ')' sentencia ELSE sentencia
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 117
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 65
+
+   25 sentIteracion: WHILE '(' . expresion ')' sentencia
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 118
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 66
+
+   12 sentencia: '\n' .
+
+    $default  reduce using rule 12 (sentencia)
+
+
+State 67
+
+   26 sentIteracion: DO sentencia . WHILE '(' expresion ')' ';'
+
+    WHILE  shift, and go to state 119
+
+
+State 68
+
+   27 sentIteracion: FOR '(' . expresion ';' expresion ';' expresion ')'
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 120
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 69
+
+   29 sentSalto: BREAK ';' .
+
+    $default  reduce using rule 29 (sentSalto)
+
+
+State 70
+
+   30 sentSalto: RETURN expresion . ';'
+   62 expresion: expresion . ',' expAsignacion
+
+    ';'  shift, and go to state 121
+    ','  shift, and go to state 92
+
+
+State 71
+
+   31 sentSalto: GOTO IDENTIFICADOR . ';'
+
+    ';'  shift, and go to state 122
+
+
+State 72
+
+   28 sentSalto: CONTINUE ';' .
+
+    $default  reduce using rule 28 (sentSalto)
+
+
+State 73
+
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   97 expUnaria: SIZEOF '(' . tipoDeDato ')'
+
+    CHAR    shift, and go to state 77
+    DOUBLE  shift, and go to state 78
+    FLOAT   shift, and go to state 79
+    INT     shift, and go to state 80
+    LONG    shift, and go to state 14
+    SHORT   shift, and go to state 81
+
+    tipoDeDato  go to state 123
+
+
+State 74
+
+   93 expUnaria: MENOS_MENOS expUnaria .  [MENOS_MENOS, MAS_MAS, '=', MAS_IGUAL, MENOS_IGUAL, POR_IGUAL, OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+   94          | expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+
+    MENOS_MENOS  [reduce using rule 93 (expUnaria)]
+    MAS_MAS      [reduce using rule 93 (expUnaria)]
+    $default     reduce using rule 93 (expUnaria)
+
+
+State 75
+
+   92 expUnaria: MAS_MAS expUnaria .  [MENOS_MENOS, MAS_MAS, '=', MAS_IGUAL, MENOS_IGUAL, POR_IGUAL, OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+   94          | expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+
+    MENOS_MENOS  [reduce using rule 92 (expUnaria)]
+    MAS_MAS      [reduce using rule 92 (expUnaria)]
+    $default     reduce using rule 92 (expUnaria)
+
+
+State 76
+
+   35 declaracionVarSimples: error . caracterDeCorte
+  116 caracterDeCorte: . ';'
+  117                | . '\n'
+
+    '\n'  shift, and go to state 61
+    ';'   shift, and go to state 62
+
+    caracterDeCorte  go to state 63
+
+
+State 77
+
+   36 tipoDeDato: CHAR .
+
+    $default  reduce using rule 36 (tipoDeDato)
+
+
+State 78
+
+   37 tipoDeDato: DOUBLE .
+
+    $default  reduce using rule 37 (tipoDeDato)
+
+
+State 79
+
+   38 tipoDeDato: FLOAT .
+
+    $default  reduce using rule 38 (tipoDeDato)
+
+
+State 80
+
+   39 tipoDeDato: INT .
+
+    $default  reduce using rule 39 (tipoDeDato)
+
+
+State 81
+
+   41 tipoDeDato: SHORT .
+
+    $default  reduce using rule 41 (tipoDeDato)
+
+
+State 82
+
+    6 sentencia: . sentCompuesta
+    7          | . sentExpresion
+    8          | . sentSeleccion
+    9          | . sentIteracion
+   10          | . sentSalto
+   11          | . declaracion
+   12          | . '\n'
+   13          | . definicionFuncion
+   14          | . error
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   15              | '{' listaDeclaraciones . listaSentencias '}'
+   17 listaDeclaraciones: listaDeclaraciones . declaracion
+   19 listaSentencias: . sentencia
+   20                | . listaSentencias sentencia
+   21                | . %empty  [error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '}', '(', '&', '!']
+   22 sentExpresion: . expresion ';'
+   23 sentSeleccion: . IF '(' expresion ')' sentencia
+   24              | . IF '(' expresion ')' sentencia ELSE sentencia
+   25 sentIteracion: . WHILE '(' expresion ')' sentencia
+   26              | . DO sentencia WHILE '(' expresion ')' ';'
+   27              | . FOR '(' expresion ';' expresion ';' expresion ')'
+   28 sentSalto: . CONTINUE ';'
+   29          | . BREAK ';'
+   30          | . RETURN expresion ';'
+   31          | . GOTO IDENTIFICADOR ';'
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: . tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   55 tipoDeRetorno: . CHAR
+   56              | . DOUBLE
+   57              | . FLOAT
+   58              | . INT
+   59              | . SHORT
+   60              | . VOID
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    error           shift, and go to state 3
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    CHAR            shift, and go to state 10
+    DOUBLE          shift, and go to state 11
+    FLOAT           shift, and go to state 12
+    INT             shift, and go to state 13
+    LONG            shift, and go to state 14
+    SHORT           shift, and go to state 15
+    VOID            shift, and go to state 16
+    IF              shift, and go to state 17
+    WHILE           shift, and go to state 18
+    DO              shift, and go to state 19
+    FOR             shift, and go to state 20
+    BREAK           shift, and go to state 21
+    RETURN          shift, and go to state 22
+    GOTO            shift, and go to state 23
+    CONTINUE        shift, and go to state 24
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '\n'            shift, and go to state 66
+    '{'             shift, and go to state 32
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    error           [reduce using rule 21 (listaSentencias)]
+    LITERAL_CADENA  [reduce using rule 21 (listaSentencias)]
+    CONST_CARACTER  [reduce using rule 21 (listaSentencias)]
+    CONST_REAL      [reduce using rule 21 (listaSentencias)]
+    CONST_HEX       [reduce using rule 21 (listaSentencias)]
+    CONST_OCT       [reduce using rule 21 (listaSentencias)]
+    CONST_DEC       [reduce using rule 21 (listaSentencias)]
+    CHAR            [reduce using rule 21 (listaSentencias)]
+    DOUBLE          [reduce using rule 21 (listaSentencias)]
+    FLOAT           [reduce using rule 21 (listaSentencias)]
+    INT             [reduce using rule 21 (listaSentencias)]
+    LONG            [reduce using rule 21 (listaSentencias)]
+    SHORT           [reduce using rule 21 (listaSentencias)]
+    VOID            [reduce using rule 21 (listaSentencias)]
+    IF              [reduce using rule 21 (listaSentencias)]
+    WHILE           [reduce using rule 21 (listaSentencias)]
+    DO              [reduce using rule 21 (listaSentencias)]
+    FOR             [reduce using rule 21 (listaSentencias)]
+    BREAK           [reduce using rule 21 (listaSentencias)]
+    RETURN          [reduce using rule 21 (listaSentencias)]
+    GOTO            [reduce using rule 21 (listaSentencias)]
+    CONTINUE        [reduce using rule 21 (listaSentencias)]
+    IDENTIFICADOR   [reduce using rule 21 (listaSentencias)]
+    SIZEOF          [reduce using rule 21 (listaSentencias)]
+    MENOS_MENOS     [reduce using rule 21 (listaSentencias)]
+    MAS_MAS         [reduce using rule 21 (listaSentencias)]
+    '-'             [reduce using rule 21 (listaSentencias)]
+    '*'             [reduce using rule 21 (listaSentencias)]
+    '\n'            [reduce using rule 21 (listaSentencias)]
+    '{'             [reduce using rule 21 (listaSentencias)]
+    '}'             reduce using rule 21 (listaSentencias)
+    '('             [reduce using rule 21 (listaSentencias)]
+    '&'             [reduce using rule 21 (listaSentencias)]
+    '!'             [reduce using rule 21 (listaSentencias)]
+
+    sentencia              go to state 124
+    sentCompuesta          go to state 38
+    listaSentencias        go to state 125
+    sentExpresion          go to state 39
+    sentSeleccion          go to state 40
+    sentIteracion          go to state 41
+    sentSalto              go to state 42
+    declaracion            go to state 126
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+    definicionFuncion      go to state 46
+    tipoDeRetorno          go to state 47
+    expresion              go to state 48
+    expAsignacion          go to state 49
+    expCondicional         go to state 50
+    expOr                  go to state 51
+    expAnd                 go to state 52
+    expIgualdad            go to state 53
+    expRelacional          go to state 54
+    expAditiva             go to state 55
+    expMultiplicativa      go to state 56
+    expUnaria              go to state 57
+    operUnario             go to state 58
+    expPostfijo            go to state 59
+    expPrimaria            go to state 60
+
+
+State 83
+
+   16 listaDeclaraciones: declaracion .
+
+    $default  reduce using rule 16 (listaDeclaraciones)
+
+
+State 84
+
+   62 expresion: expresion . ',' expAsignacion
+  115 expPrimaria: '(' expresion . ')'
+
+    ')'  shift, and go to state 127
+    ','  shift, and go to state 92
+
+
+State 85
+
+    4 line: sentencia '\n' .
+
+    $default  reduce using rule 4 (line)
+
+
+State 86
+
+   44 listaVarSimples: error .  [';']
+   49 unaVarSimple: error .  [';', ',']
+
+    ';'       reduce using rule 44 (listaVarSimples)
+    ';'       [reduce using rule 49 (unaVarSimple)]
+    ','       reduce using rule 49 (unaVarSimple)
+    $default  reduce using rule 44 (listaVarSimples)
+
+
+State 87
+
+   34 declaracionVarSimples: tipoDeDato IDENTIFICADOR . '(' lista_argumentos ')' sentCompuesta
+   45 $@1: . %empty  [',']
+   46 unaVarSimple: IDENTIFICADOR . $@1 ',' unaVarSimple
+   47             | IDENTIFICADOR .  [';', ',']
+   48             | IDENTIFICADOR . '=' expresion
+
+    '='  shift, and go to state 128
+    '('  shift, and go to state 129
+
+    ';'       reduce using rule 47 (unaVarSimple)
+    ','       reduce using rule 45 ($@1)
+    ','       [reduce using rule 47 (unaVarSimple)]
+    $default  reduce using rule 45 ($@1)
+
+    $@1  go to state 130
+
+
+State 88
+
+   33 declaracionVarSimples: tipoDeDato listaVarSimples . ';'
+
+    ';'  shift, and go to state 131
+
+
+State 89
+
+   42 listaVarSimples: unaVarSimple .  [';']
+   43                | unaVarSimple . ',' listaVarSimples
+
+    ','  shift, and go to state 132
+
+    $default  reduce using rule 42 (listaVarSimples)
+
+
+State 90
+
+   50 definicionFuncion: tipoDeRetorno IDENTIFICADOR . '(' lista_argumentos ')' sentCompuesta
+
+    '('  shift, and go to state 133
+
+
+State 91
+
+   22 sentExpresion: expresion ';' .
+
+    $default  reduce using rule 22 (sentExpresion)
+
+
+State 92
+
+   62 expresion: expresion ',' . expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expAsignacion      go to state 134
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 93
+
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   70               | expOr OR . expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   73      | expOr OR . expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expCondicional     go to state 135
+    expOr              go to state 51
+    expAnd             go to state 136
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 94
+
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   71               | expOr '?' . expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 138
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 95
+
+   75 expAnd: expAnd AND . expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expIgualdad        go to state 139
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 96
+
+   78 expIgualdad: expIgualdad DESIGUALDAD . expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expRelacional      go to state 140
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 97
+
+   77 expIgualdad: expIgualdad IGUALDAD . expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expRelacional      go to state 141
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 98
+
+   80 expRelacional: expRelacional '<' . expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expAditiva         go to state 142
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 99
+
+   82 expRelacional: expRelacional '>' . expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expAditiva         go to state 143
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 100
+
+   83 expRelacional: expRelacional MAYORIGUAL . expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expAditiva         go to state 144
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 101
+
+   81 expRelacional: expRelacional MENORIGUAL . expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expAditiva         go to state 145
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 102
+
+   85 expAditiva: expAditiva '+' . expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expMultiplicativa  go to state 146
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 103
+
+   86 expAditiva: expAditiva '-' . expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expMultiplicativa  go to state 147
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 104
+
+   88 expMultiplicativa: expMultiplicativa '*' . expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expUnaria    go to state 148
+    operUnario   go to state 58
+    expPostfijo  go to state 59
+    expPrimaria  go to state 60
+
+
+State 105
+
+   89 expMultiplicativa: expMultiplicativa '/' . expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expUnaria    go to state 149
+    operUnario   go to state 58
+    expPostfijo  go to state 59
+    expPrimaria  go to state 60
+
+
+State 106
+
+   90 expMultiplicativa: expMultiplicativa '%' . expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expUnaria    go to state 150
+    operUnario   go to state 58
+    expPostfijo  go to state 59
+    expPrimaria  go to state 60
+
+
+State 107
+
+   95 expUnaria: expUnaria MENOS_MENOS .
+
+    $default  reduce using rule 95 (expUnaria)
+
+
+State 108
+
+   94 expUnaria: expUnaria MAS_MAS .
+
+    $default  reduce using rule 94 (expUnaria)
+
+
+State 109
+
+   65 operAsignacion: '=' .
+
+    $default  reduce using rule 65 (operAsignacion)
+
+
+State 110
+
+   66 operAsignacion: MAS_IGUAL .
+
+    $default  reduce using rule 66 (operAsignacion)
+
+
+State 111
+
+   67 operAsignacion: MENOS_IGUAL .
+
+    $default  reduce using rule 67 (operAsignacion)
+
+
+State 112
+
+   68 operAsignacion: POR_IGUAL .
+
+    $default  reduce using rule 68 (operAsignacion)
+
+
+State 113
+
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   64              | expUnaria operAsignacion . expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expAsignacion      go to state 151
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 114
+
+   94 expUnaria: expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+   96          | operUnario expUnaria .  [MENOS_MENOS, MAS_MAS, '=', MAS_IGUAL, MENOS_IGUAL, POR_IGUAL, OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+
+    MENOS_MENOS  [reduce using rule 96 (expUnaria)]
+    MAS_MAS      [reduce using rule 96 (expUnaria)]
+    $default     reduce using rule 96 (expUnaria)
+
+
+State 115
+
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  104            | expPostfijo '(' . listaArgumentos ')'
+  105 listaArgumentos: . expAsignacion
+  106                | . listaArgumentos ',' expAsignacion
+  107                | . %empty  [')', ',']
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    $default  reduce using rule 107 (listaArgumentos)
+
+    expAsignacion      go to state 152
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    listaArgumentos    go to state 153
+    expPrimaria        go to state 60
+
+
+State 116
+
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  103            | expPostfijo '[' . expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 154
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 117
+
+   23 sentSeleccion: IF '(' expresion . ')' sentencia
+   24              | IF '(' expresion . ')' sentencia ELSE sentencia
+   62 expresion: expresion . ',' expAsignacion
+
+    ')'  shift, and go to state 155
+    ','  shift, and go to state 92
+
+
+State 118
+
+   25 sentIteracion: WHILE '(' expresion . ')' sentencia
+   62 expresion: expresion . ',' expAsignacion
+
+    ')'  shift, and go to state 156
+    ','  shift, and go to state 92
+
+
+State 119
+
+   26 sentIteracion: DO sentencia WHILE . '(' expresion ')' ';'
+
+    '('  shift, and go to state 157
+
+
+State 120
+
+   27 sentIteracion: FOR '(' expresion . ';' expresion ';' expresion ')'
+   62 expresion: expresion . ',' expAsignacion
+
+    ';'  shift, and go to state 158
+    ','  shift, and go to state 92
+
+
+State 121
+
+   30 sentSalto: RETURN expresion ';' .
+
+    $default  reduce using rule 30 (sentSalto)
+
+
+State 122
+
+   31 sentSalto: GOTO IDENTIFICADOR ';' .
+
+    $default  reduce using rule 31 (sentSalto)
+
+
+State 123
+
+   97 expUnaria: SIZEOF '(' tipoDeDato . ')'
+
+    ')'  shift, and go to state 159
+
+
+State 124
+
+   19 listaSentencias: sentencia .
+
+    $default  reduce using rule 19 (listaSentencias)
+
+
+State 125
+
+    6 sentencia: . sentCompuesta
+    7          | . sentExpresion
+    8          | . sentSeleccion
+    9          | . sentIteracion
+   10          | . sentSalto
+   11          | . declaracion
+   12          | . '\n'
+   13          | . definicionFuncion
+   14          | . error
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   15              | '{' listaDeclaraciones listaSentencias . '}'
+   20 listaSentencias: listaSentencias . sentencia
+   22 sentExpresion: . expresion ';'
+   23 sentSeleccion: . IF '(' expresion ')' sentencia
+   24              | . IF '(' expresion ')' sentencia ELSE sentencia
+   25 sentIteracion: . WHILE '(' expresion ')' sentencia
+   26              | . DO sentencia WHILE '(' expresion ')' ';'
+   27              | . FOR '(' expresion ';' expresion ';' expresion ')'
+   28 sentSalto: . CONTINUE ';'
+   29          | . BREAK ';'
+   30          | . RETURN expresion ';'
+   31          | . GOTO IDENTIFICADOR ';'
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: . tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   55 tipoDeRetorno: . CHAR
+   56              | . DOUBLE
+   57              | . FLOAT
+   58              | . INT
+   59              | . SHORT
+   60              | . VOID
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    error           shift, and go to state 3
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    CHAR            shift, and go to state 10
+    DOUBLE          shift, and go to state 11
+    FLOAT           shift, and go to state 12
+    INT             shift, and go to state 13
+    LONG            shift, and go to state 14
+    SHORT           shift, and go to state 15
+    VOID            shift, and go to state 16
+    IF              shift, and go to state 17
+    WHILE           shift, and go to state 18
+    DO              shift, and go to state 19
+    FOR             shift, and go to state 20
+    BREAK           shift, and go to state 21
+    RETURN          shift, and go to state 22
+    GOTO            shift, and go to state 23
+    CONTINUE        shift, and go to state 24
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '\n'            shift, and go to state 66
+    '{'             shift, and go to state 32
+    '}'             shift, and go to state 160
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    sentencia              go to state 161
+    sentCompuesta          go to state 38
+    sentExpresion          go to state 39
+    sentSeleccion          go to state 40
+    sentIteracion          go to state 41
+    sentSalto              go to state 42
+    declaracion            go to state 43
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+    definicionFuncion      go to state 46
+    tipoDeRetorno          go to state 47
+    expresion              go to state 48
+    expAsignacion          go to state 49
+    expCondicional         go to state 50
+    expOr                  go to state 51
+    expAnd                 go to state 52
+    expIgualdad            go to state 53
+    expRelacional          go to state 54
+    expAditiva             go to state 55
+    expMultiplicativa      go to state 56
+    expUnaria              go to state 57
+    operUnario             go to state 58
+    expPostfijo            go to state 59
+    expPrimaria            go to state 60
+
+
+State 126
+
+   11 sentencia: declaracion .  [error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '}', '(', '&', '!']
+   17 listaDeclaraciones: listaDeclaraciones declaracion .  [error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '}', '(', '&', '!']
+
+    error           reduce using rule 11 (sentencia)
+    error           [reduce using rule 17 (listaDeclaraciones)]
+    LITERAL_CADENA  reduce using rule 11 (sentencia)
+    LITERAL_CADENA  [reduce using rule 17 (listaDeclaraciones)]
+    CONST_CARACTER  reduce using rule 11 (sentencia)
+    CONST_CARACTER  [reduce using rule 17 (listaDeclaraciones)]
+    CONST_REAL      reduce using rule 11 (sentencia)
+    CONST_REAL      [reduce using rule 17 (listaDeclaraciones)]
+    CONST_HEX       reduce using rule 11 (sentencia)
+    CONST_HEX       [reduce using rule 17 (listaDeclaraciones)]
+    CONST_OCT       reduce using rule 11 (sentencia)
+    CONST_OCT       [reduce using rule 17 (listaDeclaraciones)]
+    CONST_DEC       reduce using rule 11 (sentencia)
+    CONST_DEC       [reduce using rule 17 (listaDeclaraciones)]
+    CHAR            reduce using rule 11 (sentencia)
+    CHAR            [reduce using rule 17 (listaDeclaraciones)]
+    DOUBLE          reduce using rule 11 (sentencia)
+    DOUBLE          [reduce using rule 17 (listaDeclaraciones)]
+    FLOAT           reduce using rule 11 (sentencia)
+    FLOAT           [reduce using rule 17 (listaDeclaraciones)]
+    INT             reduce using rule 11 (sentencia)
+    INT             [reduce using rule 17 (listaDeclaraciones)]
+    LONG            reduce using rule 11 (sentencia)
+    LONG            [reduce using rule 17 (listaDeclaraciones)]
+    SHORT           reduce using rule 11 (sentencia)
+    SHORT           [reduce using rule 17 (listaDeclaraciones)]
+    VOID            reduce using rule 11 (sentencia)
+    VOID            [reduce using rule 17 (listaDeclaraciones)]
+    IF              reduce using rule 11 (sentencia)
+    IF              [reduce using rule 17 (listaDeclaraciones)]
+    WHILE           reduce using rule 11 (sentencia)
+    WHILE           [reduce using rule 17 (listaDeclaraciones)]
+    DO              reduce using rule 11 (sentencia)
+    DO              [reduce using rule 17 (listaDeclaraciones)]
+    FOR             reduce using rule 11 (sentencia)
+    FOR             [reduce using rule 17 (listaDeclaraciones)]
+    BREAK           reduce using rule 11 (sentencia)
+    BREAK           [reduce using rule 17 (listaDeclaraciones)]
+    RETURN          reduce using rule 11 (sentencia)
+    RETURN          [reduce using rule 17 (listaDeclaraciones)]
+    GOTO            reduce using rule 11 (sentencia)
+    GOTO            [reduce using rule 17 (listaDeclaraciones)]
+    CONTINUE        reduce using rule 11 (sentencia)
+    CONTINUE        [reduce using rule 17 (listaDeclaraciones)]
+    IDENTIFICADOR   reduce using rule 11 (sentencia)
+    IDENTIFICADOR   [reduce using rule 17 (listaDeclaraciones)]
+    SIZEOF          reduce using rule 11 (sentencia)
+    SIZEOF          [reduce using rule 17 (listaDeclaraciones)]
+    MENOS_MENOS     reduce using rule 11 (sentencia)
+    MENOS_MENOS     [reduce using rule 17 (listaDeclaraciones)]
+    MAS_MAS         reduce using rule 11 (sentencia)
+    MAS_MAS         [reduce using rule 17 (listaDeclaraciones)]
+    '-'             reduce using rule 11 (sentencia)
+    '-'             [reduce using rule 17 (listaDeclaraciones)]
+    '*'             reduce using rule 11 (sentencia)
+    '*'             [reduce using rule 17 (listaDeclaraciones)]
+    '\n'            reduce using rule 11 (sentencia)
+    '\n'            [reduce using rule 17 (listaDeclaraciones)]
+    '{'             reduce using rule 11 (sentencia)
+    '{'             [reduce using rule 17 (listaDeclaraciones)]
+    '}'             reduce using rule 11 (sentencia)
+    '}'             [reduce using rule 17 (listaDeclaraciones)]
+    '('             reduce using rule 11 (sentencia)
+    '('             [reduce using rule 17 (listaDeclaraciones)]
+    '&'             reduce using rule 11 (sentencia)
+    '&'             [reduce using rule 17 (listaDeclaraciones)]
+    '!'             reduce using rule 11 (sentencia)
+    '!'             [reduce using rule 17 (listaDeclaraciones)]
+    $default        reduce using rule 11 (sentencia)
+
+
+State 127
+
+  115 expPrimaria: '(' expresion ')' .
+
+    $default  reduce using rule 115 (expPrimaria)
+
+
+State 128
+
+   48 unaVarSimple: IDENTIFICADOR '=' . expresion
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 162
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 129
+
+   34 declaracionVarSimples: tipoDeDato IDENTIFICADOR '(' . lista_argumentos ')' sentCompuesta
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   51 lista_argumentos: . argumento ',' lista_argumentos
+   52                 | . argumento
+   53                 | . %empty  [')']
+   54 argumento: . tipoDeDato IDENTIFICADOR
+
+    CHAR    shift, and go to state 77
+    DOUBLE  shift, and go to state 78
+    FLOAT   shift, and go to state 79
+    INT     shift, and go to state 80
+    LONG    shift, and go to state 14
+    SHORT   shift, and go to state 81
+
+    $default  reduce using rule 53 (lista_argumentos)
+
+    tipoDeDato        go to state 163
+    lista_argumentos  go to state 164
+    argumento         go to state 165
+
+
+State 130
+
+   46 unaVarSimple: IDENTIFICADOR $@1 . ',' unaVarSimple
+
+    ','  shift, and go to state 166
+
+
+State 131
+
+   33 declaracionVarSimples: tipoDeDato listaVarSimples ';' .
+
+    $default  reduce using rule 33 (declaracionVarSimples)
+
+
+State 132
+
+   42 listaVarSimples: . unaVarSimple
+   43                | . unaVarSimple ',' listaVarSimples
+   43                | unaVarSimple ',' . listaVarSimples
+   44                | . error
+   46 unaVarSimple: . IDENTIFICADOR $@1 ',' unaVarSimple
+   47             | . IDENTIFICADOR
+   48             | . IDENTIFICADOR '=' expresion
+   49             | . error
+
+    error          shift, and go to state 86
+    IDENTIFICADOR  shift, and go to state 167
+
+    listaVarSimples  go to state 168
+    unaVarSimple     go to state 89
+
+
+State 133
+
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: tipoDeRetorno IDENTIFICADOR '(' . lista_argumentos ')' sentCompuesta
+   51 lista_argumentos: . argumento ',' lista_argumentos
+   52                 | . argumento
+   53                 | . %empty  [')']
+   54 argumento: . tipoDeDato IDENTIFICADOR
+
+    CHAR    shift, and go to state 77
+    DOUBLE  shift, and go to state 78
+    FLOAT   shift, and go to state 79
+    INT     shift, and go to state 80
+    LONG    shift, and go to state 14
+    SHORT   shift, and go to state 81
+
+    $default  reduce using rule 53 (lista_argumentos)
+
+    tipoDeDato        go to state 163
+    lista_argumentos  go to state 169
+    argumento         go to state 165
+
+
+State 134
+
+   62 expresion: expresion ',' expAsignacion .
+
+    $default  reduce using rule 62 (expresion)
+
+
+State 135
+
+   70 expCondicional: expOr OR expCondicional .
+
+    $default  reduce using rule 70 (expCondicional)
+
+
+State 136
+
+   72 expOr: expAnd .  [OR, ';', ')', ',', '?', ':', ']']
+   73      | expOr OR expAnd .  [OR, ';', ')', ',', '?', ':', ']']
+   75 expAnd: expAnd . AND expIgualdad
+
+    AND  shift, and go to state 95
+
+    OR        reduce using rule 72 (expOr)
+    OR        [reduce using rule 73 (expOr)]
+    ';'       reduce using rule 72 (expOr)
+    ';'       [reduce using rule 73 (expOr)]
+    ')'       reduce using rule 72 (expOr)
+    ')'       [reduce using rule 73 (expOr)]
+    ','       reduce using rule 72 (expOr)
+    ','       [reduce using rule 73 (expOr)]
+    '?'       reduce using rule 72 (expOr)
+    '?'       [reduce using rule 73 (expOr)]
+    ':'       reduce using rule 72 (expOr)
+    ':'       [reduce using rule 73 (expOr)]
+    ']'       reduce using rule 72 (expOr)
+    ']'       [reduce using rule 73 (expOr)]
+    $default  reduce using rule 72 (expOr)
+
+
+State 137
+
+   87 expMultiplicativa: expUnaria .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+   94 expUnaria: expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+
+    $default  reduce using rule 87 (expMultiplicativa)
+
+
+State 138
+
+   62 expresion: expresion . ',' expAsignacion
+   71 expCondicional: expOr '?' expresion . ':' expCondicional
+
+    ','  shift, and go to state 92
+    ':'  shift, and go to state 170
+
+
+State 139
+
+   75 expAnd: expAnd AND expIgualdad .  [OR, AND, ';', ')', ',', '?', ':', ']']
+   77 expIgualdad: expIgualdad . IGUALDAD expRelacional
+   78            | expIgualdad . DESIGUALDAD expRelacional
+
+    DESIGUALDAD  shift, and go to state 96
+    IGUALDAD     shift, and go to state 97
+
+    $default  reduce using rule 75 (expAnd)
+
+
+State 140
+
+   78 expIgualdad: expIgualdad DESIGUALDAD expRelacional .  [OR, AND, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   80 expRelacional: expRelacional . '<' expAditiva
+   81              | expRelacional . MENORIGUAL expAditiva
+   82              | expRelacional . '>' expAditiva
+   83              | expRelacional . MAYORIGUAL expAditiva
+
+    '<'         shift, and go to state 98
+    '>'         shift, and go to state 99
+    MAYORIGUAL  shift, and go to state 100
+    MENORIGUAL  shift, and go to state 101
+
+    $default  reduce using rule 78 (expIgualdad)
+
+
+State 141
+
+   77 expIgualdad: expIgualdad IGUALDAD expRelacional .  [OR, AND, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   80 expRelacional: expRelacional . '<' expAditiva
+   81              | expRelacional . MENORIGUAL expAditiva
+   82              | expRelacional . '>' expAditiva
+   83              | expRelacional . MAYORIGUAL expAditiva
+
+    '<'         shift, and go to state 98
+    '>'         shift, and go to state 99
+    MAYORIGUAL  shift, and go to state 100
+    MENORIGUAL  shift, and go to state 101
+
+    $default  reduce using rule 77 (expIgualdad)
+
+
+State 142
+
+   80 expRelacional: expRelacional '<' expAditiva .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   85 expAditiva: expAditiva . '+' expMultiplicativa
+   86           | expAditiva . '-' expMultiplicativa
+
+    '+'  shift, and go to state 102
+    '-'  shift, and go to state 103
+
+    $default  reduce using rule 80 (expRelacional)
+
+
+State 143
+
+   82 expRelacional: expRelacional '>' expAditiva .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   85 expAditiva: expAditiva . '+' expMultiplicativa
+   86           | expAditiva . '-' expMultiplicativa
+
+    '+'  shift, and go to state 102
+    '-'  shift, and go to state 103
+
+    $default  reduce using rule 82 (expRelacional)
+
+
+State 144
+
+   83 expRelacional: expRelacional MAYORIGUAL expAditiva .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   85 expAditiva: expAditiva . '+' expMultiplicativa
+   86           | expAditiva . '-' expMultiplicativa
+
+    '+'  shift, and go to state 102
+    '-'  shift, and go to state 103
+
+    $default  reduce using rule 83 (expRelacional)
+
+
+State 145
+
+   81 expRelacional: expRelacional MENORIGUAL expAditiva .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, ';', ')', ',', '?', ':', ']']
+   85 expAditiva: expAditiva . '+' expMultiplicativa
+   86           | expAditiva . '-' expMultiplicativa
+
+    '+'  shift, and go to state 102
+    '-'  shift, and go to state 103
+
+    $default  reduce using rule 81 (expRelacional)
+
+
+State 146
+
+   85 expAditiva: expAditiva '+' expMultiplicativa .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', ';', ')', ',', '?', ':', ']']
+   88 expMultiplicativa: expMultiplicativa . '*' expUnaria
+   89                  | expMultiplicativa . '/' expUnaria
+   90                  | expMultiplicativa . '%' expUnaria
+
+    '*'  shift, and go to state 104
+    '/'  shift, and go to state 105
+    '%'  shift, and go to state 106
+
+    $default  reduce using rule 85 (expAditiva)
+
+
+State 147
+
+   86 expAditiva: expAditiva '-' expMultiplicativa .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', ';', ')', ',', '?', ':', ']']
+   88 expMultiplicativa: expMultiplicativa . '*' expUnaria
+   89                  | expMultiplicativa . '/' expUnaria
+   90                  | expMultiplicativa . '%' expUnaria
+
+    '*'  shift, and go to state 104
+    '/'  shift, and go to state 105
+    '%'  shift, and go to state 106
+
+    $default  reduce using rule 86 (expAditiva)
+
+
+State 148
+
+   88 expMultiplicativa: expMultiplicativa '*' expUnaria .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+   94 expUnaria: expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+
+    $default  reduce using rule 88 (expMultiplicativa)
+
+
+State 149
+
+   89 expMultiplicativa: expMultiplicativa '/' expUnaria .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+   94 expUnaria: expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+
+    $default  reduce using rule 89 (expMultiplicativa)
+
+
+State 150
+
+   90 expMultiplicativa: expMultiplicativa '%' expUnaria .  [OR, AND, '<', '>', MAYORIGUAL, MENORIGUAL, DESIGUALDAD, IGUALDAD, '+', '-', '*', '/', '%', ';', ')', ',', '?', ':', ']']
+   94 expUnaria: expUnaria . MAS_MAS
+   95          | expUnaria . MENOS_MENOS
+
+    MENOS_MENOS  shift, and go to state 107
+    MAS_MAS      shift, and go to state 108
+
+    $default  reduce using rule 90 (expMultiplicativa)
+
+
+State 151
+
+   64 expAsignacion: expUnaria operAsignacion expAsignacion .
+
+    $default  reduce using rule 64 (expAsignacion)
+
+
+State 152
+
+  105 listaArgumentos: expAsignacion .
+
+    $default  reduce using rule 105 (listaArgumentos)
+
+
+State 153
+
+  104 expPostfijo: expPostfijo '(' listaArgumentos . ')'
+  106 listaArgumentos: listaArgumentos . ',' expAsignacion
+
+    ')'  shift, and go to state 171
+    ','  shift, and go to state 172
+
+
+State 154
+
+   62 expresion: expresion . ',' expAsignacion
+  103 expPostfijo: expPostfijo '[' expresion . ']'
+
+    ','  shift, and go to state 92
+    ']'  shift, and go to state 173
+
+
+State 155
+
+    6 sentencia: . sentCompuesta
+    7          | . sentExpresion
+    8          | . sentSeleccion
+    9          | . sentIteracion
+   10          | . sentSalto
+   11          | . declaracion
+   12          | . '\n'
+   13          | . definicionFuncion
+   14          | . error
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   22 sentExpresion: . expresion ';'
+   23 sentSeleccion: . IF '(' expresion ')' sentencia
+   23              | IF '(' expresion ')' . sentencia
+   24              | . IF '(' expresion ')' sentencia ELSE sentencia
+   24              | IF '(' expresion ')' . sentencia ELSE sentencia
+   25 sentIteracion: . WHILE '(' expresion ')' sentencia
+   26              | . DO sentencia WHILE '(' expresion ')' ';'
+   27              | . FOR '(' expresion ';' expresion ';' expresion ')'
+   28 sentSalto: . CONTINUE ';'
+   29          | . BREAK ';'
+   30          | . RETURN expresion ';'
+   31          | . GOTO IDENTIFICADOR ';'
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: . tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   55 tipoDeRetorno: . CHAR
+   56              | . DOUBLE
+   57              | . FLOAT
+   58              | . INT
+   59              | . SHORT
+   60              | . VOID
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    error           shift, and go to state 3
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    CHAR            shift, and go to state 10
+    DOUBLE          shift, and go to state 11
+    FLOAT           shift, and go to state 12
+    INT             shift, and go to state 13
+    LONG            shift, and go to state 14
+    SHORT           shift, and go to state 15
+    VOID            shift, and go to state 16
+    IF              shift, and go to state 17
+    WHILE           shift, and go to state 18
+    DO              shift, and go to state 19
+    FOR             shift, and go to state 20
+    BREAK           shift, and go to state 21
+    RETURN          shift, and go to state 22
+    GOTO            shift, and go to state 23
+    CONTINUE        shift, and go to state 24
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '\n'            shift, and go to state 66
+    '{'             shift, and go to state 32
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    sentencia              go to state 174
+    sentCompuesta          go to state 38
+    sentExpresion          go to state 39
+    sentSeleccion          go to state 40
+    sentIteracion          go to state 41
+    sentSalto              go to state 42
+    declaracion            go to state 43
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+    definicionFuncion      go to state 46
+    tipoDeRetorno          go to state 47
+    expresion              go to state 48
+    expAsignacion          go to state 49
+    expCondicional         go to state 50
+    expOr                  go to state 51
+    expAnd                 go to state 52
+    expIgualdad            go to state 53
+    expRelacional          go to state 54
+    expAditiva             go to state 55
+    expMultiplicativa      go to state 56
+    expUnaria              go to state 57
+    operUnario             go to state 58
+    expPostfijo            go to state 59
+    expPrimaria            go to state 60
+
+
+State 156
+
+    6 sentencia: . sentCompuesta
+    7          | . sentExpresion
+    8          | . sentSeleccion
+    9          | . sentIteracion
+   10          | . sentSalto
+   11          | . declaracion
+   12          | . '\n'
+   13          | . definicionFuncion
+   14          | . error
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   22 sentExpresion: . expresion ';'
+   23 sentSeleccion: . IF '(' expresion ')' sentencia
+   24              | . IF '(' expresion ')' sentencia ELSE sentencia
+   25 sentIteracion: . WHILE '(' expresion ')' sentencia
+   25              | WHILE '(' expresion ')' . sentencia
+   26              | . DO sentencia WHILE '(' expresion ')' ';'
+   27              | . FOR '(' expresion ';' expresion ';' expresion ')'
+   28 sentSalto: . CONTINUE ';'
+   29          | . BREAK ';'
+   30          | . RETURN expresion ';'
+   31          | . GOTO IDENTIFICADOR ';'
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: . tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   55 tipoDeRetorno: . CHAR
+   56              | . DOUBLE
+   57              | . FLOAT
+   58              | . INT
+   59              | . SHORT
+   60              | . VOID
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    error           shift, and go to state 3
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    CHAR            shift, and go to state 10
+    DOUBLE          shift, and go to state 11
+    FLOAT           shift, and go to state 12
+    INT             shift, and go to state 13
+    LONG            shift, and go to state 14
+    SHORT           shift, and go to state 15
+    VOID            shift, and go to state 16
+    IF              shift, and go to state 17
+    WHILE           shift, and go to state 18
+    DO              shift, and go to state 19
+    FOR             shift, and go to state 20
+    BREAK           shift, and go to state 21
+    RETURN          shift, and go to state 22
+    GOTO            shift, and go to state 23
+    CONTINUE        shift, and go to state 24
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '\n'            shift, and go to state 66
+    '{'             shift, and go to state 32
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    sentencia              go to state 175
+    sentCompuesta          go to state 38
+    sentExpresion          go to state 39
+    sentSeleccion          go to state 40
+    sentIteracion          go to state 41
+    sentSalto              go to state 42
+    declaracion            go to state 43
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+    definicionFuncion      go to state 46
+    tipoDeRetorno          go to state 47
+    expresion              go to state 48
+    expAsignacion          go to state 49
+    expCondicional         go to state 50
+    expOr                  go to state 51
+    expAnd                 go to state 52
+    expIgualdad            go to state 53
+    expRelacional          go to state 54
+    expAditiva             go to state 55
+    expMultiplicativa      go to state 56
+    expUnaria              go to state 57
+    operUnario             go to state 58
+    expPostfijo            go to state 59
+    expPrimaria            go to state 60
+
+
+State 157
+
+   26 sentIteracion: DO sentencia WHILE '(' . expresion ')' ';'
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 176
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 158
+
+   27 sentIteracion: FOR '(' expresion ';' . expresion ';' expresion ')'
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 177
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 159
+
+   97 expUnaria: SIZEOF '(' tipoDeDato ')' .
+
+    $default  reduce using rule 97 (expUnaria)
+
+
+State 160
+
+   15 sentCompuesta: '{' listaDeclaraciones listaSentencias '}' .
+
+    $default  reduce using rule 15 (sentCompuesta)
+
+
+State 161
+
+   20 listaSentencias: listaSentencias sentencia .
+
+    $default  reduce using rule 20 (listaSentencias)
+
+
+State 162
+
+   48 unaVarSimple: IDENTIFICADOR '=' expresion .  [';', ',']
+   62 expresion: expresion . ',' expAsignacion
+
+    ','  shift, and go to state 92
+
+    ','       [reduce using rule 48 (unaVarSimple)]
+    $default  reduce using rule 48 (unaVarSimple)
+
+
+State 163
+
+   54 argumento: tipoDeDato . IDENTIFICADOR
+
+    IDENTIFICADOR  shift, and go to state 178
+
+
+State 164
+
+   34 declaracionVarSimples: tipoDeDato IDENTIFICADOR '(' lista_argumentos . ')' sentCompuesta
+
+    ')'  shift, and go to state 179
+
+
+State 165
+
+   51 lista_argumentos: argumento . ',' lista_argumentos
+   52                 | argumento .  [')']
+
+    ','  shift, and go to state 180
+
+    $default  reduce using rule 52 (lista_argumentos)
+
+
+State 166
+
+   46 unaVarSimple: . IDENTIFICADOR $@1 ',' unaVarSimple
+   46             | IDENTIFICADOR $@1 ',' . unaVarSimple
+   47             | . IDENTIFICADOR
+   48             | . IDENTIFICADOR '=' expresion
+   49             | . error
+
+    error          shift, and go to state 181
+    IDENTIFICADOR  shift, and go to state 167
+
+    unaVarSimple  go to state 182
+
+
+State 167
+
+   45 $@1: . %empty  [',']
+   46 unaVarSimple: IDENTIFICADOR . $@1 ',' unaVarSimple
+   47             | IDENTIFICADOR .  [';', ',']
+   48             | IDENTIFICADOR . '=' expresion
+
+    '='  shift, and go to state 128
+
+    ';'       reduce using rule 47 (unaVarSimple)
+    ','       reduce using rule 45 ($@1)
+    ','       [reduce using rule 47 (unaVarSimple)]
+    $default  reduce using rule 45 ($@1)
+
+    $@1  go to state 130
+
+
+State 168
+
+   43 listaVarSimples: unaVarSimple ',' listaVarSimples .
+
+    $default  reduce using rule 43 (listaVarSimples)
+
+
+State 169
+
+   50 definicionFuncion: tipoDeRetorno IDENTIFICADOR '(' lista_argumentos . ')' sentCompuesta
+
+    ')'  shift, and go to state 183
+
+
+State 170
+
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   71               | expOr '?' expresion ':' . expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expCondicional     go to state 184
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 137
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 171
+
+  104 expPostfijo: expPostfijo '(' listaArgumentos ')' .
+
+    $default  reduce using rule 104 (expPostfijo)
+
+
+State 172
+
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  106 listaArgumentos: listaArgumentos ',' . expAsignacion
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expAsignacion      go to state 185
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 173
+
+  103 expPostfijo: expPostfijo '[' expresion ']' .
+
+    $default  reduce using rule 103 (expPostfijo)
+
+
+State 174
+
+   23 sentSeleccion: IF '(' expresion ')' sentencia .  [$end, error, LITERAL_CADENA, CONST_CARACTER, CONST_REAL, CONST_HEX, CONST_OCT, CONST_DEC, CHAR, DOUBLE, FLOAT, INT, LONG, SHORT, VOID, IF, ELSE, WHILE, DO, FOR, BREAK, RETURN, GOTO, CONTINUE, IDENTIFICADOR, SIZEOF, MENOS_MENOS, MAS_MAS, '-', '*', '\n', '{', '}', '(', '&', '!']
+   24              | IF '(' expresion ')' sentencia . ELSE sentencia
+
+    ELSE  shift, and go to state 186
+
+    ELSE      [reduce using rule 23 (sentSeleccion)]
+    $default  reduce using rule 23 (sentSeleccion)
+
+
+State 175
+
+   25 sentIteracion: WHILE '(' expresion ')' sentencia .
+
+    $default  reduce using rule 25 (sentIteracion)
+
+
+State 176
+
+   26 sentIteracion: DO sentencia WHILE '(' expresion . ')' ';'
+   62 expresion: expresion . ',' expAsignacion
+
+    ')'  shift, and go to state 187
+    ','  shift, and go to state 92
+
+
+State 177
+
+   27 sentIteracion: FOR '(' expresion ';' expresion . ';' expresion ')'
+   62 expresion: expresion . ',' expAsignacion
+
+    ';'  shift, and go to state 188
+    ','  shift, and go to state 92
+
+
+State 178
+
+   54 argumento: tipoDeDato IDENTIFICADOR .
+
+    $default  reduce using rule 54 (argumento)
+
+
+State 179
+
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   34 declaracionVarSimples: tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' . sentCompuesta
+
+    '{'  shift, and go to state 32
+
+    sentCompuesta  go to state 189
+
+
+State 180
+
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   51 lista_argumentos: . argumento ',' lista_argumentos
+   51                 | argumento ',' . lista_argumentos
+   52                 | . argumento
+   53                 | . %empty  [')']
+   54 argumento: . tipoDeDato IDENTIFICADOR
+
+    CHAR    shift, and go to state 77
+    DOUBLE  shift, and go to state 78
+    FLOAT   shift, and go to state 79
+    INT     shift, and go to state 80
+    LONG    shift, and go to state 14
+    SHORT   shift, and go to state 81
+
+    $default  reduce using rule 53 (lista_argumentos)
+
+    tipoDeDato        go to state 163
+    lista_argumentos  go to state 190
+    argumento         go to state 165
+
+
+State 181
+
+   49 unaVarSimple: error .
+
+    $default  reduce using rule 49 (unaVarSimple)
+
+
+State 182
+
+   46 unaVarSimple: IDENTIFICADOR $@1 ',' unaVarSimple .
+
+    $default  reduce using rule 46 (unaVarSimple)
+
+
+State 183
+
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   50 definicionFuncion: tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' . sentCompuesta
+
+    '{'  shift, and go to state 32
+
+    sentCompuesta  go to state 191
+
+
+State 184
+
+   71 expCondicional: expOr '?' expresion ':' expCondicional .
+
+    $default  reduce using rule 71 (expCondicional)
+
+
+State 185
+
+  106 listaArgumentos: listaArgumentos ',' expAsignacion .
+
+    $default  reduce using rule 106 (listaArgumentos)
+
+
+State 186
+
+    6 sentencia: . sentCompuesta
+    7          | . sentExpresion
+    8          | . sentSeleccion
+    9          | . sentIteracion
+   10          | . sentSalto
+   11          | . declaracion
+   12          | . '\n'
+   13          | . definicionFuncion
+   14          | . error
+   15 sentCompuesta: . '{' listaDeclaraciones listaSentencias '}'
+   22 sentExpresion: . expresion ';'
+   23 sentSeleccion: . IF '(' expresion ')' sentencia
+   24              | . IF '(' expresion ')' sentencia ELSE sentencia
+   24              | IF '(' expresion ')' sentencia ELSE . sentencia
+   25 sentIteracion: . WHILE '(' expresion ')' sentencia
+   26              | . DO sentencia WHILE '(' expresion ')' ';'
+   27              | . FOR '(' expresion ';' expresion ';' expresion ')'
+   28 sentSalto: . CONTINUE ';'
+   29          | . BREAK ';'
+   30          | . RETURN expresion ';'
+   31          | . GOTO IDENTIFICADOR ';'
+   32 declaracion: . declaracionVarSimples
+   33 declaracionVarSimples: . tipoDeDato listaVarSimples ';'
+   34                      | . tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   35                      | . error caracterDeCorte
+   36 tipoDeDato: . CHAR
+   37           | . DOUBLE
+   38           | . FLOAT
+   39           | . INT
+   40           | . LONG
+   41           | . SHORT
+   50 definicionFuncion: . tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta
+   55 tipoDeRetorno: . CHAR
+   56              | . DOUBLE
+   57              | . FLOAT
+   58              | . INT
+   59              | . SHORT
+   60              | . VOID
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    error           shift, and go to state 3
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    CHAR            shift, and go to state 10
+    DOUBLE          shift, and go to state 11
+    FLOAT           shift, and go to state 12
+    INT             shift, and go to state 13
+    LONG            shift, and go to state 14
+    SHORT           shift, and go to state 15
+    VOID            shift, and go to state 16
+    IF              shift, and go to state 17
+    WHILE           shift, and go to state 18
+    DO              shift, and go to state 19
+    FOR             shift, and go to state 20
+    BREAK           shift, and go to state 21
+    RETURN          shift, and go to state 22
+    GOTO            shift, and go to state 23
+    CONTINUE        shift, and go to state 24
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '\n'            shift, and go to state 66
+    '{'             shift, and go to state 32
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    sentencia              go to state 192
+    sentCompuesta          go to state 38
+    sentExpresion          go to state 39
+    sentSeleccion          go to state 40
+    sentIteracion          go to state 41
+    sentSalto              go to state 42
+    declaracion            go to state 43
+    declaracionVarSimples  go to state 44
+    tipoDeDato             go to state 45
+    definicionFuncion      go to state 46
+    tipoDeRetorno          go to state 47
+    expresion              go to state 48
+    expAsignacion          go to state 49
+    expCondicional         go to state 50
+    expOr                  go to state 51
+    expAnd                 go to state 52
+    expIgualdad            go to state 53
+    expRelacional          go to state 54
+    expAditiva             go to state 55
+    expMultiplicativa      go to state 56
+    expUnaria              go to state 57
+    operUnario             go to state 58
+    expPostfijo            go to state 59
+    expPrimaria            go to state 60
+
+
+State 187
+
+   26 sentIteracion: DO sentencia WHILE '(' expresion ')' . ';'
+
+    ';'  shift, and go to state 193
+
+
+State 188
+
+   27 sentIteracion: FOR '(' expresion ';' expresion ';' . expresion ')'
+   61 expresion: . expAsignacion
+   62          | . expresion ',' expAsignacion
+   63 expAsignacion: . expCondicional
+   64              | . expUnaria operAsignacion expAsignacion
+   69 expCondicional: . expOr
+   70               | . expOr OR expCondicional
+   71               | . expOr '?' expresion ':' expCondicional
+   72 expOr: . expAnd
+   73      | . expOr OR expAnd
+   74 expAnd: . expIgualdad
+   75       | . expAnd AND expIgualdad
+   76 expIgualdad: . expRelacional
+   77            | . expIgualdad IGUALDAD expRelacional
+   78            | . expIgualdad DESIGUALDAD expRelacional
+   79 expRelacional: . expAditiva
+   80              | . expRelacional '<' expAditiva
+   81              | . expRelacional MENORIGUAL expAditiva
+   82              | . expRelacional '>' expAditiva
+   83              | . expRelacional MAYORIGUAL expAditiva
+   84 expAditiva: . expMultiplicativa
+   85           | . expAditiva '+' expMultiplicativa
+   86           | . expAditiva '-' expMultiplicativa
+   87 expMultiplicativa: . expUnaria
+   88                  | . expMultiplicativa '*' expUnaria
+   89                  | . expMultiplicativa '/' expUnaria
+   90                  | . expMultiplicativa '%' expUnaria
+   91 expUnaria: . expPostfijo
+   92          | . MAS_MAS expUnaria
+   93          | . MENOS_MENOS expUnaria
+   94          | . expUnaria MAS_MAS
+   95          | . expUnaria MENOS_MENOS
+   96          | . operUnario expUnaria
+   97          | . SIZEOF '(' tipoDeDato ')'
+   98 operUnario: . '&'
+   99           | . '*'
+  100           | . '-'
+  101           | . '!'
+  102 expPostfijo: . expPrimaria
+  103            | . expPostfijo '[' expresion ']'
+  104            | . expPostfijo '(' listaArgumentos ')'
+  108 expPrimaria: . IDENTIFICADOR
+  109            | . CONST_DEC
+  110            | . CONST_OCT
+  111            | . CONST_HEX
+  112            | . CONST_REAL
+  113            | . CONST_CARACTER
+  114            | . LITERAL_CADENA
+  115            | . '(' expresion ')'
+
+    LITERAL_CADENA  shift, and go to state 4
+    CONST_CARACTER  shift, and go to state 5
+    CONST_REAL      shift, and go to state 6
+    CONST_HEX       shift, and go to state 7
+    CONST_OCT       shift, and go to state 8
+    CONST_DEC       shift, and go to state 9
+    IDENTIFICADOR   shift, and go to state 25
+    SIZEOF          shift, and go to state 26
+    MENOS_MENOS     shift, and go to state 27
+    MAS_MAS         shift, and go to state 28
+    '-'             shift, and go to state 29
+    '*'             shift, and go to state 30
+    '('             shift, and go to state 33
+    '&'             shift, and go to state 34
+    '!'             shift, and go to state 35
+
+    expresion          go to state 194
+    expAsignacion      go to state 49
+    expCondicional     go to state 50
+    expOr              go to state 51
+    expAnd             go to state 52
+    expIgualdad        go to state 53
+    expRelacional      go to state 54
+    expAditiva         go to state 55
+    expMultiplicativa  go to state 56
+    expUnaria          go to state 57
+    operUnario         go to state 58
+    expPostfijo        go to state 59
+    expPrimaria        go to state 60
+
+
+State 189
+
+   34 declaracionVarSimples: tipoDeDato IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta .
+
+    $default  reduce using rule 34 (declaracionVarSimples)
+
+
+State 190
+
+   51 lista_argumentos: argumento ',' lista_argumentos .
+
+    $default  reduce using rule 51 (lista_argumentos)
+
+
+State 191
+
+   50 definicionFuncion: tipoDeRetorno IDENTIFICADOR '(' lista_argumentos ')' sentCompuesta .
+
+    $default  reduce using rule 50 (definicionFuncion)
+
+
+State 192
+
+   24 sentSeleccion: IF '(' expresion ')' sentencia ELSE sentencia .
+
+    $default  reduce using rule 24 (sentSeleccion)
+
+
+State 193
+
+   26 sentIteracion: DO sentencia WHILE '(' expresion ')' ';' .
+
+    $default  reduce using rule 26 (sentIteracion)
+
+
+State 194
+
+   27 sentIteracion: FOR '(' expresion ';' expresion ';' expresion . ')'
+   62 expresion: expresion . ',' expAsignacion
+
+    ')'  shift, and go to state 195
+    ','  shift, and go to state 92
+
+
+State 195
+
+   27 sentIteracion: FOR '(' expresion ';' expresion ';' expresion ')' .
+
+    $default  reduce using rule 27 (sentIteracion)

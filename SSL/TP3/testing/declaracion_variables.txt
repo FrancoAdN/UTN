@@ -1,0 +1,20 @@
+int a = 5;
+int b, c, d;
+char e = 'c';float f = 2,g = 4;
+
+double error = ;
+double err
+double err
+
+int ;
+int te, td, tf, tt;
+double ;
+
+ #//1_asd
+
+
+int test = 56;
+short test_ = 45.6;
+
+
+(12 variables declaradas)

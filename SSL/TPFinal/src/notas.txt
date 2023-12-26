@@ -1,0 +1,36 @@
+
+
+Listado de Variables declaradas:
+Variable declarada con tipo "int", identificador "a"
+Variable declarada con tipo "int", identificador "b"
+Variable declarada con tipo "int", identificador "c"
+Variable declarada con tipo "int", identificador "d"
+Variable declarada con tipo "char", identificador "e"
+Variable declarada con tipo "float", identificador "f"
+Variable declarada con tipo "int", identificador "te"
+Variable declarada con tipo "int", identificador "td"
+Variable declarada con tipo "int", identificador "tf"
+Variable declarada con tipo "int", identificador "tt"
+Variable declarada con tipo "short", identificador "test_"
+Variable declarada con tipo "int", identificador "a"
+
+
+Listado de Sentencias encontradas:
+Sentencia de tipo "Compuesta" encontrada en linea 26
+Sentencia de tipo "Compuesta" encontrada en linea 28
+Sentencia de tipo "Compuesta" encontrada en linea 30
+
+
+Listado de Estructuras o caracteres NO reconocidos:
+No reconocido en linea: 7, de tipo: Sintactico
+No reconocido en linea: 11, de tipo: Sintactico
+No reconocido en linea: 15, de tipo: Sintactico
+No reconocido en linea: 17, de tipo: Lexico
+No reconocido en linea: 17, de tipo: Sintactico
+
+
+Listado de Funciones definidas:
+Funcion "test" con tipo de retorno: int, cantidad de argumentos 0
+Funcion "main" con tipo de retorno: void, cantidad de argumentos 0
+Funcion "main" con tipo de retorno: void, cantidad de argumentos 2
+

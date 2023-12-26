@@ -1,0 +1,7 @@
+int test() {
+    int a = 45;
+}
+
+void main() {}
+
+void main(int a, int b) {}

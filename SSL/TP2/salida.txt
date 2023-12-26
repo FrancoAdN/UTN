@@ -1,0 +1,116 @@
+        Listado de Identificadores
+
+Identificador: a - Cantidad: 2
+Identificador: b - Cantidad: 2
+Identificador: c - Cantidad: 2
+Identificador: d - Cantidad: 1
+Identificador: de - Cantidad: 1
+Identificador: flotante - Cantidad: 1
+Identificador: funcion - Cantidad: 1
+Identificador: h - Cantidad: 2
+Identificador: include - Cantidad: 2
+Identificador: main - Cantidad: 1
+Identificador: n - Cantidad: 1
+Identificador: numero - Cantidad: 5
+Identificador: numero_ - Cantidad: 2
+Identificador: printf - Cantidad: 5
+Identificador: stdio - Cantidad: 1
+Identificador: stdlib - Cantidad: 1
+
+
+        Listado de Literales Cadena
+
+Literal Cadena: "a" - Longitud: 1
+Literal Cadena: "Esto es una cadena" - Longitud: 18
+Literal Cadena: "Todo esta bien: %d\n" - Longitud: 20
+Literal Cadena: "Cadena no tan corta\n" - Longitud: 21
+Literal Cadena: "Esto es una cadena mucho pero mucho mas larga" - Longitud: 45
+
+
+        Listado de Palabras Reservadas
+
+Palabra Reservada: int - Tipo de Palabra Reservada: Tipo de dato
+Palabra Reservada: char - Tipo de Palabra Reservada: Tipo de dato
+Palabra Reservada: char - Tipo de Palabra Reservada: Tipo de dato
+Palabra Reservada: int - Tipo de Palabra Reservada: Tipo de dato
+Palabra Reservada: float - Tipo de Palabra Reservada: Tipo de dato
+Palabra Reservada: double - Tipo de Palabra Reservada: Tipo de dato
+Palabra Reservada: while - Tipo de Palabra Reservada: Estructura de control
+Palabra Reservada: return - Tipo de Palabra Reservada: Otra
+
+
+        Listado de Constantes Octal
+
+Constante Octal: 0 - Valor decimal de la constante: 0
+Constante Octal: 0320 - Valor decimal de la constante: 208
+Constante Octal: 010 - Valor decimal de la constante: 8
+
+
+        Listado de Constantes Hexadecimal
+
+Constante Hexadecimal: 0x31 - Valor decimal de la constante: 49
+Constante Hexadecimal: 0X30 - Valor decimal de la constante: 48
+
+
+        Listado de Constantes Decimales
+
+Constante Decimal: 101
+Constante Decimal: 8
+Total acumulado de las variables decimales: 109
+
+
+        Listado de Constantes Reales
+
+Constante Real: 88.5  Valor Entero: 88  Valor Mantisa: 0.500000
+Constante Real: 599.684  Valor Entero: 599  Valor Mantisa: 0.684021
+Constante Real: 0.3  Valor Entero: 0  Valor Mantisa: 0.300000
+
+
+        Listado de Constantes Caracter
+
+Orden de aparicion: 1 - Constante caracter: 'd'
+Orden de aparicion: 2 - Constante caracter: 't'
+Orden de aparicion: 3 - Constante caracter: 'f'
+
+
+        Listado de Operadores
+
+Operador: != - Cantidad: 1
+Operador: ( - Cantidad: 8
+Operador: ) - Cantidad: 8
+Operador: + - Cantidad: 3
+Operador: , - Cantidad: 5
+Operador: ; - Cantidad: 13
+Operador: < - Cantidad: 2
+Operador: = - Cantidad: 8
+Operador: > - Cantidad: 2
+Operador: { - Cantidad: 2
+Operador: } - Cantidad: 2
+
+
+        Listado de Comentarios de una linea
+
+Comentario: //COmentario2 
+Comentario: //COmentario
+Comentario: //Comentario simple linea
+
+
+        Listado de Comentarios de multiples lineas
+
+Comentario: /* void funcionQUeHaceAlgo
+    comentarioMultilinea
+    */
+
+
+        Listado de Tokens no reconocidos
+
+Token no reconocido: '	 en la linea: 8
+Token no reconocido: '	 en la linea: 8
+Token no reconocido: #	 en la linea: 4
+Token no reconocido: #	 en la linea: 3
+Token no reconocido: .	 en la linea: 2
+Token no reconocido: #	 en la linea: 2
+Token no reconocido: .	 en la linea: 1
+Token no reconocido: #	 en la linea: 1
+
+

@@ -1,0 +1,42 @@
+int main();
+int two();
+{ a = b;}
+{ int a = 4; char t;;}
+
+
+int b;
+
+printf("esto es una prueba %d\n", test);
+
+while(test) { int a, b, c, dd;int e = 4, _t= 4, l = 5;}
+
+
+int test() {}
+
+
+
+int main() { 
+    char a,b,c,d;
+    a = 'd';b = 'de';c = 't';
+    char n = 'f';
+
+    int numero = 0108+0320;
+    numero = 0.3 + 599.684; 
+    float flotante = 88.5;
+    double numero_ = 0X30 + 0x31;
+
+    funcion (numero_,numero);
+    while(numero != 101){
+        printf("Cadena no tan corta\n");
+        printf("Todo esta bien: %d\n",numero);
+        printf("Esto es una cadena mucho pero mucho mas larga")
+        printf("a");
+        printf("Esto es una cadena")
+    }
+
+    return 0;
+}
+
+
+
+int test() {}

@@ -1,0 +1,73 @@
+#include<test.h>
+
+// comentario corto
+/* 
+    test multiple
+    asd
+    asd
+    doblesDeclaraciones
+    asda
+    asdada
+    comentario largo
+*/
+
+
+int n1, n2;
+char n1;
+
+;
+
+int suma(int a, int b) {
+    return a + b;
+}
+
+char a_nota(int num, char t, int o_num) {
+    return 'a';
+}
+
+void maint(int aa_a, int b) {}
+
+
+char maintte(char a, float tt) {}
+
+
+
+void main() {
+    char test, _test;
+    int total = suma(n1, n2);
+
+    float total = 45 + total;
+
+    nuevo_total = 10 + 50;
+
+    char b = a_nota(a, 'c', total);
+
+    no_definida = 34;
+
+    int buena_expresion = test + 45 + 70 < (30 * test) ;
+    int mala_expresion_str = test + 45 + "str-falla";
+
+    int no_reconocida = te;
+    
+    float f;
+
+    maintte(test, 1);
+    maintte(test, total);
+    maintte(e, f);
+    maintte(e);
+    maintte(e, f, f);
+    maintte(e, f, 1);
+
+    if (a < 40) {
+        b = 't';
+        double err
+        double error = ;
+    }
+
+    while(test) {
+        int aa = 40, b;
+    }
+
+
+
+}

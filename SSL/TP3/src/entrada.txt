@@ -1,0 +1,83 @@
+int a = 5;
+int b, c, d;
+char e = 'c';float f = 2;
+
+
+/* void funcionQUeHaceAlgo
+    comentarioMultilinea
+*/
+
+    // test comentario
+
+
+
+double error = ;
+double err
+
+int te, td, tf, tt;
+double ;
+
+{ a=b; }
+#<include>
+{
+    int a;
+    a++;
+    a = c;
+}
+
+if(test == 1) return "hola";
+
+if (test != 0) {
+    t = !test;
+    break;
+} else {
+    continue;
+}
+
+if(test) {} else {
+    else {
+
+    }
+}
+
+for(i = 0 ; true; exp) {
+    goto x;
+}
+for(int i = 0; exp; i++) {
+    int a = "new var";
+}
+
+do {
+    test++;
+} while(_test);
+
+while(!test) {
+    char a, b, c;
+    a = 'c';
+}
+
+double t = (a || b % 2) ? tyl : tt;
+
+{
+    test(a, b);
+    func();
+    t()
+}
+
+void myfuncion(int arg_uno, char arg_dos, float arg_tres) {
+    short var_dentro_func = 40;
+    while(test) {
+    char a, b, c;
+    a = 'c';
+}
+}
+
+int my_otra_funcion(int arg_uno, char arg_dos, float arg_tres) {
+    short var_dentro_func = 40;
+}
+
+char testf() {
+    int test_func_char;
+    sizeof(int);
+}
+

@@ -1,0 +1,205 @@
+/* [!&\*\+\-/|%><\?]     { return OPERADORDEC; }
+\/\/(.)*|\/\*(.)*\*\/           { return COMENTARIO; } */
+[ \r\t\n]+                                            /*No deberia hacer nada*/
+
+
+
+y > 5 && x != 0
+a * 55 / 3 + 4
+
+/* "\n"	{ return '\n'; }
+"\r"	{ return '\r'; }
+"\t"	{ return '\t'; } */
+
+{ 
+    int a = 450;
+    while (x < 10) {
+    printf("x es menor que 10");
+}
+do {
+    printf("Esto se ejecutará al menos una vez");
+} while (x < 5);
+
+        for (i = 0; i < 10; i++) {
+            printf("Iteración %d", i);
+        }
+    return x = 45;
+}
+
+
+{ 
+    int a = 450;
+    while (x < 10) {
+    printf("x es menor que 10");
+}
+do {
+    printf("Esto se ejecutará al menos una vez");
+} while (x < 5);
+
+        for (i = 0; i < 10; i++) {
+            printf("Iteración %d", i);
+        }
+    return x = 45;
+}
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#
+#
+int main(){ //Comentario simple linea
+    char a,b,c,d;
+    a = 'd';b = 'de';c = 't';
+    char n = 'f';
+    /* void funcionQUeHaceAlgo
+    comentarioMultilinea
+    */
+    int numero = 0108+0320;
+    numero = 0.3 + 599.684; //COmentario
+    float flotante = 88.5;
+    double numero_ = 0X30 + 0x31;
+    //COmentario2 
+    funcion (numero_,numero);
+    while(numero != 101){
+        printf("Cadena no tan corta\n");
+        printf("Todo esta bien: %d\n",numero);
+        printf("Esto es una cadena mucho pero mucho mas larga")
+        printf("a");
+        printf("Esto es una cadena")
+    }
+
+    return 0;
+}
+
+
+
+
+void agregarDeclaracion(char identificador[100], TipoVariable tipo) {
+    ListaDeclaracion* nodo = (ListaDeclaracion*) malloc(sizeof(struct ListaDeclaracion));
+    strcpy(nodo->identificador, identificador);
+    nodo->tipo = tipo;
+    nodo->siguiente = ListaVariablesDeclaradas;
+    printf("VARIABLE DECLARADA: tipo: %s, identificador: %s\n", obtenerTipoDeDato(tipo), nodo->identificador);
+    if (!ListaVariablesDeclaradas) {
+        ListaVariablesDeclaradas = nodo;
+    } else {
+        ListaDeclaracion* actual = ListaVariablesDeclaradas;
+        while (actual->siguiente != NULL) {
+            actual = actual->siguiente;
+        }
+        actual->siguiente = nodo;
+    }
+
+
+    // ListaVariablesDeclaradas = nodo;
+}
+
+
+
+
+
+
+
+
+
+// listaDeclaracion:  /* Vacio */
+// 	| declaracion ';' listaDeclaracion
+
+// ;
+
+// declaracion: declaracionVarSimples
+// ;
+// declaracionVarSimples: tipoDeDato IDENTIFICADOR ';'  {strcpy(identificador, $<valor>2); printf("HERE Variable Declarada: %i %s (sin expresion)\n",datoDeclarado, identificador ); agregarDeclaracion(identificador, datoDeclarado);}
+//                     | tipoDeDato IDENTIFICADOR '=' expresion ';' {strcpy(identificador, $<valor>2);printf("HERE Variable Declarada: %i %s (con expresion)\n", datoDeclarado, identificador );agregarDeclaracion(identificador, datoDeclarado);}
+
+					
+
+
+// tipoDeDato: CHAR 	{ datoDeclarado = TIPO_CHAR; }
+// 	  | DOUBLE	{ datoDeclarado = TIPO_DOUBLE; }
+// 	  | FLOAT	{ datoDeclarado = TIPO_FLOAT; }
+// 	  | INT		{ datoDeclarado = TIPO_INT; }
+// 	  | LONG	{ datoDeclarado = TIPO_LONG; }
+// 	  | SHORT	{ datoDeclarado = TIPO_SHORT; }
+// ;
+
+
+
+
+// listaVarSimples: unaVarSimple
+// 				| unaVarSimple ',' listaVarSimples
+// ;
+// unaVarSimple: IDENTIFICADOR { agregarDeclaracion($<s.valor>1, datoDeclarado); } ',' unaVarSimple
+// 			| IDENTIFICADOR { agregarDeclaracion($<s.valor>1, datoDeclarado); }
+// 			| IDENTIFICADOR { agregarDeclaracion($<s.valor>1, datoDeclarado); } '=' expresion  
+
+
+
+// declaracion: especificadores_declaracion lista_declaradores ';'
+//            | especificadores_declaracion ';'
+//            ;
+
+// especificadores_declaracion: especificador_tipo especificadores_declaracion
+//                         | /* Vacío */
+//                         ;
+
+// especificador_tipo: VOID
+//                 | CHAR    
+//                 | SHORT         
+//                 | INT           
+//                 | LONG          
+//                 | FLOAT         
+//                 | DOUBLE            
+//                 | SIGNED           
+//                 | UNSIGNED         
+//                 // | IDENTIFIER
+//                 ;
+
+// lista_declaradores: declarador 
+//                  | lista_declaradores ',' declarador
+//                  ;
+
+// declarador: decla
+//             | decla '=' inicializador
+//             ;
+// inicializador: expresion
+//             | '{' lista_inicializadores '}'
+//             ;
+
+// lista_inicializadores: inicializador
+//                     | lista_inicializadores ',' inicializador
+//                     ;
+
+// decla: declarador_directo
+//     // declaracion puntero
+//         ;
+
+// declarador_directo: IDENTIFICADOR { printf("Identificador declarado_directo: %s\n", $<s.valor>1);}
+//                 | declarador_directo '[' ']'
+//                 | declarador_directo '[' expresion ']'
+//                 | declarador_directo '(' lista_parametros ')'
+//                 | declarador_directo '(' ')'
+//                 | declarador_directo '(' lista_identificadores ')'
+//                 ;
+
+// lista_parametros: declaracion_parametro
+//                 | lista_parametros ',' declaracion_parametro
+//                 ;
+
+// declaracion_parametro: especificadores_declaracion decla
+// ;
+
+// lista_identificadores: IDENTIFICADOR
+//                     | lista_identificadores ',' IDENTIFICADOR
+// ;
+
+
+// tipoDeDato: CHAR 	
+// 	  | DOUBLE	
+// 	  | FLOAT	
+// 	  | INT		
+// 	  | LONG	
+// 	  | SHORT	
+// ;
+

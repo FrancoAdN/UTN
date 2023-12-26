@@ -1,0 +1,29 @@
+#include <stdio.h>
+#include <stdlib.h>
+#
+#
+int main(){ //Comentario simple linea
+    char a,b,c,d;
+    a = 'd';
+    b = 'de';
+    c = 't'
+    char n = 'f';
+    /* void funcionQUeHaceAlgo
+    comentarioMultilinea
+    */
+    int numero = 0108+0320;
+    numero = 0.3 + 599.684; //COmentario
+    float flotante = 88.5;
+    double numero_ = 0X30 + 0x31;
+    //COmentario2 
+    funcion (numero_,numero);
+    while(numero != 101){
+        printf("Cadena no tan corta\n");
+        printf("Todo esta bien: %d\n",numero);
+        printf("Esto es una cadena mucho pero mucho mas larga")
+        printf("a");
+        printf("Esto es una cadena")
+    }
+
+    return 0;
+}
