@@ -1,0 +1,234 @@
+import TPObjetos.*
+
+describe "group of tests" {
+
+	test "valoracion fahrenheit 451 ilustrado es 8000" {
+		fahrenheit451.version(versionIlustrada)
+		assert.equals(8000, fahrenheit451.valoracion())
+	}
+	
+	test "valoracion fahrenheit 451 texto es 3500" {
+		assert.equals(3500, fahrenheit451.valoracion())
+	}
+	
+	test "precio fahrenheit 451 ilustrado es 6000" {
+		fahrenheit451.version(versionIlustrada)
+		assert.equals(6000, fahrenheit451.precio())
+	}
+	
+	test "precio fahrenheit 451 texto es 5000" {
+		assert.equals(5000, fahrenheit451.precio())
+	}
+	
+	test "precio de cuidadoConElPerro con 2900 de base que es par da 3400" {
+		assert.equals(3400, cuidadoConElPerro.precio())
+	}
+	
+	test "precio de cuidadoConElPerro con 2901 de base que es impar da 3501" {
+		cuidadoConElPerro.precio_base(2901)
+		assert.equals(3501, cuidadoConElPerro.precio())
+	}
+	
+	test "valoracion de cuidadoConElPerro con 2900 de precio base da 6700" {
+		assert.equals(6700, cuidadoConElPerro.valoracion())
+	}
+	
+	test "valor imaginario de patronesDeDisenio es 462" {
+		assert.equals(462, patronesDeDisenio.valor_imaginario())
+	}
+
+	test "valoracion de patronesDeDisenio es 4924" {
+		assert.equals(4924, patronesDeDisenio.valoracion())
+	}
+	
+	test "precio de patronesDeDisenio es 5000" {
+		assert.equals(5000, patronesDeDisenio.precio())
+	}
+	
+	test "precio de patronesDeDisenio con 302 likes es 6000" {
+		patronesDeDisenio.cantidad_likes(302)
+		assert.equals(6000, patronesDeDisenio.precio())
+	}
+	
+	test "a cristina le gusta el libro cuidadoConElPerro"{
+		assert.that(cristina.le_gusta_el_libro(cuidadoConElPerro))
+	}
+	
+	test "a cristina no le gusta el libro f451 en texto"{
+		assert.notThat(cristina.le_gusta_el_libro(fahrenheit451))
+	}
+	
+	test "a cristina le gusta el libro f451 ilustrado"{
+		fahrenheit451.version(versionIlustrada)
+		assert.that(cristina.le_gusta_el_libro(fahrenheit451))
+	}
+	
+	test "a roberto no le gusta el libro cuidadoConElPerro"{
+		assert.notThat(roberto.le_gusta_el_libro(cuidadoConElPerro))
+	}
+	
+	test "a roberto le gusta el libro patronesDeDisenio"{
+		assert.that(roberto.le_gusta_el_libro(patronesDeDisenio))
+	}
+	
+	test "a patricia le gusta el libro cuidadoConElPerro cuando esta de humor"{
+		patricia.esta_de_humor(true)
+		assert.that(patricia.le_gusta_el_libro(cuidadoConElPerro))
+	}
+	
+	test "a patricia no le gusta el libro cuidadoConElPerro cuando esta de malhumor"{
+		patricia.esta_de_humor(false)
+		assert.notThat(patricia.le_gusta_el_libro(cuidadoConElPerro))
+	}
+	
+	test "a patricia le gusta el libro cuidadoConElPerro cuando esta de malhumor"{
+		patricia.esta_de_humor(false)
+		assert.that(patricia.le_gusta_el_libro(patronesDeDisenio))
+	}	
+}
+
+describe "test de las clases"{
+	const cuento = new Libro(cant_paginas=20, precio_base=1500, autor="Jeremy Rifkin")
+	const libroCorto = new Libro(cant_paginas=80, precio_base=2000, autor="George R.R. Martin", editorial="Pearson", genero=ciencia)
+	const libroLargo = new Libro(cant_paginas=250, precio_base=4000, autor="Martin Fowler")
+	const libroFanatico = new Libro(cant_paginas=20, precio_base=1500, autor="George R.R. Martin",editorial="Pearson", genero=ciencia)
+	const reviewPeculiar = new Review(puntaje=8,comentario="es un libro muy peculiar")
+	const reviewBuena = new Review(puntaje=10,comentario="es un libro muy bueno!!")
+	const roberta = new Persona(dinero=6000, valoracion_minima=6500, criterio=tecnico)
+	const piero = new Persona(dinero=8500, valoracion_minima=3000, criterio=fanatico)
+	
+	const compraCuentoYLibroCorto = new Compra(libros=[cuento, libroCorto])
+	const compraCuentoYLibroLargo = new Compra(libros=[cuento, libroLargo])
+	const compraFanatico = new Compra(libros=[libroCorto, libroFanatico])
+	
+	const cuarentaOff = new CuponDescuento(codigo="40OFF", dcto=0.4)
+
+	const obraCorta = new Obra(cant_paginas = 200, precio_base = 2000, autor="George R.R. Martin", fasiculos=[libroCorto, libroFanatico])
+	
+	method initialize(){
+		libroCorto.agregar_review(reviewPeculiar)
+		libroCorto.agregar_review(reviewBuena)
+	}
+
+
+
+	test "puede agregar review" {
+		assert.equals(2, libroCorto.reviews().size())
+		libroCorto.agregar_review(reviewBuena)
+		assert.equals(3, libroCorto.reviews().size())
+	}
+	test "puntaje menor a 1, no puede agregar review" {
+		const reviewInvalida = new Review(puntaje = -1, comentario="comentario valido")
+		assert.equals(2, libroCorto.reviews().size())
+		assert.throwsExceptionWithMessage("El puntaje debe ser positivo.", {
+			libroCorto.agregar_review(reviewInvalida)
+		})
+		assert.equals(2, libroCorto.reviews().size())
+	}
+
+	test "comentario corto, no puede agregar review" {
+		const reviewInvalida = new Review(puntaje = 10, comentario = "corto")
+				assert.equals(2, libroCorto.reviews().size())
+
+		assert.throwsExceptionWithMessage("El comentario mayor a 10 caracteres.", {
+			libroCorto.agregar_review(reviewInvalida)
+		})
+		assert.equals(2, libroCorto.reviews().size())
+	}
+
+
+	
+	test "valoracion de libro corto es 3mil de base mas 3mil, es decir, 6mil"{
+		assert.equals(6000,libroCorto.valoracion())
+	}
+	test "valoracion de libro largo es 3mil de base mas 4mil, es decir, 7mil"{
+		assert.equals(7000,libroLargo.valoracion())
+	}
+	test "precio de libro corto es 2mil de base mas 400, es decir, 2400"{
+		assert.equals(2400,libroCorto.precio())
+	}
+	test "precio de libro largo es 4mil de base mas 1000, es decir, 5000"{
+		assert.equals(5000,libroLargo.precio())
+	}
+	test "el libro corto tiene una review grosa"{
+		assert.equals(1, libroCorto.reviews_grosas().size())
+	}
+	test "el libro corto tiene promedio nueve por tener reviews de 10 y de 8"{
+		assert.equals(9, libroCorto.puntaje_promedio())
+	}
+	test "a roberta no le gusta el libro corto (no cumple valoracion)"{
+		assert.notThat(roberta.le_gusta_el_libro(libroCorto))
+	}
+	test "a roberta le gusta el libro largo"{
+	
+		assert.that(roberta.le_gusta_el_libro(libroLargo))
+	}
+	test "a piero no le gusta el libro largo (no puede pagarlo)"{
+		assert.notThat(piero.le_gusta_el_libro(libroLargo))
+	}
+	test "a piero le gusta el libro corto"{
+		assert.that(piero.le_gusta_el_libro(libroCorto))
+	}
+	test "precio del cuento y libro corto es 1600 mas 2400, es decir 4000"{
+		assert.equals(4000,compraCuentoYLibroCorto.precio())
+	}
+	test "precio del cuento y libro largo es 1600 mas 5000, es decir 6600"{
+		assert.equals(6600,compraCuentoYLibroLargo.precio())
+	}
+	test "piero no puede comprar un cuento y libro largo"{
+		assert.throwsException({piero.agregar_compra(compraCuentoYLibroLargo)})
+	}
+	test "piero puede comprar un cuento y libro corto"{
+		piero.agregar_compra(compraFanatico)
+		assert.equals(1,piero.compras().size())
+	}
+	test "piero no tiene compras caras"{
+		piero.agregar_compra(compraFanatico)
+		assert.notThat(piero.tiene_compra_cara())
+	}
+	test "piero tiene compra del mes actual"{
+		piero.agregar_compra(compraFanatico)
+		assert.equals(piero.compras(), piero.compras_mes_actual())
+	}
+	test "cuento y libro corto ambos son top"{
+		assert.equals([cuento,libroCorto], compraCuentoYLibroCorto.libros_top())
+	}
+	
+	test "a piero no le gusta el libro corto con el nuevo autor de moda" {
+		assert.that(piero.le_gusta_el_libro(libroCorto))
+		fanatico.cambiar_autor_de_moda("Alice Feeney")
+		assert.notThat(piero.le_gusta_el_libro(libroCorto))
+	}
+	
+	test "a piero le gusta el cuento con el nuevo criterio de innovador y sin compras" {
+		assert.notThat(piero.le_gusta_el_libro(cuento))
+		piero.cambiar_criterio(innovador)
+		assert.that(piero.le_gusta_el_libro(cuento))
+	}
+	
+	test "a piero le gusta el cuento con el nuevo criterio de innovador y con compras" {
+		piero.agregar_compra(compraFanatico)
+		assert.notThat(piero.le_gusta_el_libro(cuento))
+		piero.cambiar_criterio(innovador)
+		assert.that(piero.le_gusta_el_libro(cuento))
+	}
+	
+
+	test "el precio de una obra es el libro individual (2000) mas la sumatoria de costos extras (500)" {
+		assert.equals(obraCorta.precio_extra(), 500)
+		assert.equals(obraCorta.precio(), 2500)
+	}
+	
+	test "la valoración es la valoración base de la obra (3000) mas la 5ta parte de la valoracion extra de un libro comun" {
+		assert.equals(obraCorta.valoracion(), 3400)
+	}
+	test "la valoracion se calcula con un tope de 1000 paginas" {
+		var obraLarga = new Obra(cant_paginas = 2300)
+		assert.equals(obraLarga.valoracion(), 5000)
+	}
+	
+	test "obra corta es apta para piero debido a que todos sus fasiculos son aptos" {
+		assert.that(obraCorta.es_apto_para(piero))
+	}
+
+}
